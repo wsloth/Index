@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:index/widgets/url.dart';
+import 'package:index/widgets/error.dart';
 import 'article-page.dart';
 import '../../services/article-service.dart';
 import '../../models/article-model.dart';
@@ -27,7 +29,7 @@ class _FrontPageState extends State<FrontPage> {
         article.title,
         style: _biggerFont,
       ),
-      subtitle: Text(article.url != null ? article.url : "self"),
+      subtitle: getReadableUrlWidget(article.url),
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute<void>(builder: (BuildContext context) {
         return ArticlePage(article: article);
@@ -49,11 +51,13 @@ class _FrontPageState extends State<FrontPage> {
             }
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return getGenericErrorWidget(context);
         }
 
         // By default, show a loading spinner.
-        return CircularProgressIndicator();
+        return Center(
+          child: CircularProgressIndicator()
+        );
       },
     );
   }
