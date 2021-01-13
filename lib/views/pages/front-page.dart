@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:index/widgets/article.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:index/widgets/url.dart';
 import 'package:index/widgets/error.dart';
 import 'article-page.dart';
@@ -25,11 +29,32 @@ class _FrontPageState extends State<FrontPage> {
   Widget _buildRow(ArticleModel article) {
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+
       title: Text(
         article.title,
         style: _biggerFont,
       ),
-      subtitle: getReadableUrlWidget(article.url),
+
+      subtitle: Container(
+        margin: EdgeInsets.only(top: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          children: [
+            Container(child: getArticleScoreStylizedText(context, article.score), margin: EdgeInsets.only(right: 8)),
+            Container(child: Text("${timeago.format(article.time)} ago"),margin: EdgeInsets.only(right: 8)),
+            getReadableUrlWidget(article.url),
+          ]
+        ),
+      ),
+
+      trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.message_outlined),
+          Text(article.descendants.toString())
+        ]
+      ),
+
       onTap: () => Navigator.of(context)
           .push(MaterialPageRoute<void>(builder: (BuildContext context) {
         return ArticlePage(article: article);
@@ -72,13 +97,15 @@ class _FrontPageState extends State<FrontPage> {
         flexibleSpace: FlexibleSpaceBar(
             centerTitle: true,
             title: Text("The Index",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                )),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24.0,
+                shadows: [Shadow(color: Colors.black, blurRadius: 2)]
+              )
+            ),
             background: Stack(fit: StackFit.expand, children: [
               Image.network(
-                "https://images.pexels.com/photos/102152/pexels-photo-102152.jpeg?cs=srgb&dl=pexels-markus-spiske-102152.jpg&fm=jpg",
+                'https://images.pexels.com/photos/5699665/pexels-photo-5699665.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
                 fit: BoxFit.cover,
               ),
               const DecoratedBox(
@@ -101,10 +128,11 @@ class _FrontPageState extends State<FrontPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) =>
-          _buildFrontPageHeader(context, innerBoxIsScrolled),
-      body: _buildArticlesList(),
-    ));
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) =>
+            _buildFrontPageHeader(context, innerBoxIsScrolled),
+        body: _buildArticlesList(),
+      )
+    );
   }
 }
