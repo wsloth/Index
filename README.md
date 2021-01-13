@@ -1,16 +1,21 @@
-# index
+# The Index
 
-A new Flutter project.
+More details & store links coming soon.
 
-## Getting Started
+## Developing on The Index
 
-This project is a starting point for a Flutter application.
+1. Install Flutter
+1. Clone the project
+1. Restore Flutter dependencies
+1. `flutter run`, select your device and go!
 
-A few resources to get you started if this is your first Flutter project:
+## TODO
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Multiple news sources
+- Settings, personalisation, filtering
+- Authenticating with HN/Reddit/etc
+  - Post voting
+  - Saving/bookmarking
+- Clickthrough to user
+- In app store review after x times of using the app (https://pub.dev/packages/in_app_review)
+- Proper testing

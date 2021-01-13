@@ -41,7 +41,7 @@ class _FrontPageState extends State<FrontPage> {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           children: [
             Container(child: getArticleScoreStylizedText(context, article.score), margin: EdgeInsets.only(right: 8)),
-            Container(child: Text("${timeago.format(article.time)} ago"),margin: EdgeInsets.only(right: 8)),
+            Container(child: Text(timeago.format(article.time)), margin: EdgeInsets.only(right: 8)),
             getReadableUrlWidget(article.url),
           ]
         ),

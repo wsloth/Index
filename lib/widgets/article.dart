@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:index/utils/theming.dart';
 
 /// Calculates the intensity of the redness, based on the weight of
 /// the score. When the app is being used in light mode, it will
 /// calculated based on the color black. When used in dark mode, it
 /// will calculate based on the color white.
 Color calculateArticleScoreRGBA(BuildContext context, int score) {
-  // Check if we are running in dark or light mode
-  final ThemeData mode = Theme.of(context);
-  final bool isDarkMode = mode.brightness == Brightness.dark;
+  final bool isDarkMode = Theming.isDarkMode(context);
 
   // Calculate how intensely red the score should
   final int tempCalculatedRedBasedOnScore = (score / 1.5).floor();
-  final int calculatedRedForLightMode = tempCalculatedRedBasedOnScore > 255 ? 255 : tempCalculatedRedBasedOnScore;
+  final int calculatedRedForLightMode =
+      tempCalculatedRedBasedOnScore > 255 ? 255 : tempCalculatedRedBasedOnScore;
   final int calculatedRed = isDarkMode ? 255 : calculatedRedForLightMode;
   final int calculatedGreen = isDarkMode ? 255 - calculatedRedForLightMode : 0;
   final int calculatedBlue = isDarkMode ? 255 - calculatedRedForLightMode : 0;
@@ -24,6 +24,9 @@ Color calculateArticleScoreRGBA(BuildContext context, int score) {
   );
 }
 
+/// Gets the article score, stylized based on the amount of points.
+/// Higher score means a more red color, to indicate the article is
+/// on fire 🔥
 Widget getArticleScoreStylizedText(BuildContext context, int score) {
   final Color textColor = calculateArticleScoreRGBA(context, score);
 

@@ -1,4 +1,6 @@
 class ArticleModel {
+
+  // TODO: Add more friendly property names that can be used with multiple news sources
   final String author;
   final String title;
   final String url;
@@ -29,7 +31,7 @@ class ArticleModel {
       url: json['url'],
       time: DateTime.fromMillisecondsSinceEpoch(time * 1000, isUtc: true),
       score: json['score'],
-      text: json['text'] != null ? json['text'] : "",
+      text: json['text'],
       type: json['type'],
       descendants: json['descendants'],
       // TODO: Cast to List<int> or some sort of observable
