@@ -75,6 +75,7 @@ class _ArticlePageState extends State<ArticlePage> {
               // Optional text content
               articleHasBody ? SizedBox(height: 8) : Container(),
               articleHasBody ? Html(data: _article.text) : Container(),
+              SizedBox(height: 8),
 
               // Action bar
               Separator(),
