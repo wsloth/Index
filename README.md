@@ -1,8 +1,10 @@
 # The Index
 
+![Index CI/CD](https://github.com/wsloth/Index/workflows/Index%20CI/CD/badge.svg)
+
 More details & store links coming soon.
 
-## Developing on The Index
+## Developing
 
 1. Install Flutter
 1. Clone the project
