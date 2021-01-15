@@ -33,9 +33,9 @@ class IndexApp extends StatefulWidget {
 
 class _IndexAppState extends State<IndexApp> {
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    await initDisplayMode();
+    initDisplayMode();
   }
 
   @override

@@ -11,6 +11,7 @@ More details & store links coming soon.
 
 ## TODO
 
+- Infinite scrolling (https://pub.dev/packages/infinite_scroll_pagination)
 - Multiple news sources
 - Settings, personalisation, filtering
 - Authenticating with HN/Reddit/etc
