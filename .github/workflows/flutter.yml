@@ -22,3 +22,7 @@ jobs:
 #      - run: flutter test
       - run: flutter build apk
       - run: flutter build ios --release --no-codesign
+      - uses: actions/upload-artifact@v2
+        with:
+          name: index-distributables
+          path: build/
