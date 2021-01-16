@@ -29,6 +29,8 @@ dependencies:
   flutter_displaymode: ^0.1.1
   customizable_space_bar: ^0.1.0
   google_fonts: ^1.1.1
+  sliding_sheet: ^0.4.1
+  webview_flutter: ^1.0.7
 
 dev_dependencies:
   flutter_test:
