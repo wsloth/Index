@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:index/widgets/frontpage-header.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -54,10 +55,7 @@ class _FrontPageState extends State<FrontPage> {
             Icon(Icons.message_outlined),
             Text(article.descendants.toString())
           ]),
-      onTap: () => Navigator.of(context)
-          .push(MaterialPageRoute<void>(builder: (BuildContext context) {
-        return ArticlePage(article: article);
-      })),
+      onTap: () => Get.to(ArticlePage(article: article)),
     );
   }
 

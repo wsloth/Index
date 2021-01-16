@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:index/widgets/separator.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -130,7 +131,7 @@ class _ArticlePageState extends State<ArticlePage> {
               if (await canLaunch(article.url)) {
                 await launch(article.url);
               } else {
-                // TODO: Show toast/alert/popup
+                Get.snackbar('Error', 'Unable to open url. Please try again later or contact the developer.');
               }
             },
           ),

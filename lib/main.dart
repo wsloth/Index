@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:get/route_manager.dart';
 import 'package:index/utils/theming.dart';
 
 import 'package:index/views/pages/front-page.dart';
@@ -40,7 +41,7 @@ class _IndexAppState extends State<IndexApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
         theme: Theming.lightTheme(),
         darkTheme: Theming.darkTheme(),
         themeMode: Theming.getAppThemeMode(),
