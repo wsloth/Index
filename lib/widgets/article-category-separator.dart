@@ -12,21 +12,16 @@ class ArticleCategorySeparator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       this.showSeparator ? Separator() : Container(),
-
       Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-              margin: EdgeInsets.fromLTRB(24, this.showSeparator ? 24 : 0, 24, 12),
-              child: Text(
-                this.title,
-                // textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w300,
-                ),
-              ))),
-
-      // SizedBox(height: 24),
+        alignment: Alignment.centerLeft,
+        child: Container(
+          margin: EdgeInsets.fromLTRB(24, this.showSeparator ? 24 : 0, 24, 12),
+          child: Text(
+            this.title,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ),
+      ),
     ]);
   }
 }

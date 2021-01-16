@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Returns a friendly readable URL, containing just
 /// the hostname for a clean result.
-Widget getReadableUrlWidget(final String url) {
+Widget getReadableUrlWidget(BuildContext context, final String url) {
   if (url == null) {
     return Container();
   }
@@ -15,6 +15,7 @@ Widget getReadableUrlWidget(final String url) {
   // Construct widget and set overflow behavior
   return Text(
     parsedUrl,
+    style: Theme.of(context).textTheme.subtitle2,
     overflow: TextOverflow.ellipsis,
   );
 }

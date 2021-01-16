@@ -48,17 +48,13 @@ class FrontpageHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 25),
-                Text('The Index.',
-                    style: GoogleFonts.oranienbaum(
-                        textStyle: TextStyle(fontSize: 56.0))),
+                Text('The Index.', style: Theme.of(context).textTheme.headline1),
                 SizedBox(height: 10),
                 Text('Thursday, 12 September, 17:45 Edition',
-                    style: GoogleFonts.oranienbaum(
-                        textStyle: TextStyle(fontSize: 20.0))),
+                    style: Theme.of(context).textTheme.headline2),
                 SizedBox(height: 10),
                 Text('Vol. No. 00013',
-                    style: GoogleFonts.oranienbaum(
-                        textStyle: TextStyle(fontSize: 20.0))),
+                    style: Theme.of(context).textTheme.headline2),
                 SizedBox(height: 16),
                 Row(
                   mainAxisSize: MainAxisSize.max,

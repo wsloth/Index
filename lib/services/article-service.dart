@@ -15,7 +15,12 @@ class ArticleService {
     for (int articleId in articleIds.take(50)) {
       apiCalls.add(fetchArticle(articleId));
     }
-    return await Future.wait(apiCalls);
+
+    // Fetch all & sort by most popular
+    List<ArticleModel> articles = await Future.wait(apiCalls);
+    articles.sort((a, b) => b.score.compareTo(a.score));
+
+    return articles;
   }
 
   Future<ArticleModel> fetchArticle(int articleId) async {

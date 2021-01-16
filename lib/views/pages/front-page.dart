@@ -43,9 +43,9 @@ class _FrontPageState extends State<FrontPage> {
               child: getArticleScoreStylizedText(context, article.score),
               margin: EdgeInsets.only(right: 8)),
           Container(
-              child: Text(timeago.format(article.time)),
+              child: Text(timeago.format(article.time), style: Theme.of(context).textTheme.subtitle2),
               margin: EdgeInsets.only(right: 8)),
-          getReadableUrlWidget(article.url),
+          getReadableUrlWidget(context, article.url),
         ]),
       ),
       trailing: Column(
