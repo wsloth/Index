@@ -42,12 +42,15 @@ class _IndexAppState extends State<IndexApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
+          primarySwatch: Colors.grey,
+          scaffoldBackgroundColor: Colors.white,
         ),
         darkTheme: ThemeData(
+          primarySwatch: Colors.grey,
           brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
         ),
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
         home: FrontPage());
   }
