@@ -37,6 +37,7 @@ dependencies:
   flutter_statusbarcolor: ^0.2.3
   lumberdash: ^2.1.1
   colorize_lumberdash: ^2.1.0
+  shimmer: ^1.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:index/models/articles-model.dart';
 
 import '../models/article-model.dart';
 
 class ArticleService {
   final baseUrl = 'https://hacker-news.firebaseio.com/v0/';
 
-  Future<List<ArticleModel>> fetchFrontPage() async {
+  Future<ArticlesModel> fetchFrontPage() async {
     final response = await http.get(baseUrl + 'topstories.json');
     final List<dynamic> articleIds = jsonDecode(response.body);
 
@@ -20,7 +21,10 @@ class ArticleService {
     List<ArticleModel> articles = await Future.wait(apiCalls);
     articles.sort((a, b) => b.score.compareTo(a.score));
 
-    return articles;
+    return ArticlesModel(
+      lastUpdated: DateTime.now(),
+      articles: articles,
+    );
   }
 
   Future<ArticleModel> fetchArticle(int articleId) async {

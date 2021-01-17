@@ -1,10 +1,63 @@
-import 'package:customizable_space_bar/customizable_space_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:customizable_space_bar/customizable_space_bar.dart';
+import 'package:index/widgets/shimmer.dart';
+import 'package:intl/intl.dart';
 
+import 'package:index/models/articles-model.dart';
 import 'package:index/widgets/separator.dart';
 
-class FrontpageHeader extends StatelessWidget {
+class FrontPageHeader extends StatefulWidget {
+  final Future<ArticlesModel> articles;
+
+  FrontPageHeader({this.articles});
+
+  @override
+  _FrontPageHeaderState createState() =>
+      _FrontPageHeaderState(articles: articles);
+}
+
+class _FrontPageHeaderState extends State<FrontPageHeader> {
+  Future<ArticlesModel> articles;
+
+  _FrontPageHeaderState({this.articles});
+
+  _buildHeaderAsyncContent() {
+    return FutureBuilder<ArticlesModel>(
+        future: articles,
+        builder: (context, AsyncSnapshot<ArticlesModel> snapshot) {
+          if (!snapshot.hasData) {
+            // return CircularProgressIndicator(strokeWidth: 2);
+            return Column(children: [
+              const ShimmerText(width: 225, marginBottom: 10, alignment: Alignment.center),
+              const ShimmerText(width: 100, marginBottom: 16, alignment: Alignment.center),
+              const ShimmerText(width: 150, marginBottom: 16, alignment: Alignment.center),
+            ],);
+          }
+
+          var formatter = DateFormat("EEEE',' d MMMM',' H':'m 'Edition'");
+
+          return Column(children: [
+            Text(formatter.format(snapshot.data.lastUpdated),
+                style: Theme.of(context).textTheme.headline2),
+            SizedBox(height: 10),
+            Text('Vol. No. 00013',
+                style: Theme.of(context).textTheme.headline2),
+            SizedBox(height: 16),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                IconButton(icon: Icon(Icons.refresh)),
+                SizedBox(width: 16),
+                IconButton(icon: Icon(Icons.sort)),
+                SizedBox(width: 16),
+                IconButton(icon: Icon(Icons.settings)),
+              ],
+            ),
+          ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -48,26 +101,11 @@ class FrontpageHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 25),
-                Text('The Index.', style: Theme.of(context).textTheme.headline1),
+                Text('The Index.',
+                    style: Theme.of(context).textTheme.headline1),
                 SizedBox(height: 10),
-                Text('Thursday, 12 September, 17:45 Edition',
-                    style: Theme.of(context).textTheme.headline2),
-                SizedBox(height: 10),
-                Text('Vol. No. 00013',
-                    style: Theme.of(context).textTheme.headline2),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    IconButton(icon: Icon(Icons.refresh)),
-                    SizedBox(width: 16),
-                    IconButton(icon: Icon(Icons.sort)),
-                    SizedBox(width: 16),
-                    IconButton(icon: Icon(Icons.settings)),
-                  ],
-                ),
-                SizedBox(height:20),
+                _buildHeaderAsyncContent(),
+                SizedBox(height: 20),
                 Separator(),
               ],
             ),

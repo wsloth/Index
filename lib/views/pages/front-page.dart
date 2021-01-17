@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:index/models/articles-model.dart';
 import 'package:index/widgets/frontpage-header.dart';
+import 'package:index/widgets/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:index/widgets/article.dart';
@@ -18,7 +20,7 @@ class FrontPage extends StatefulWidget {
 }
 
 class _FrontPageState extends State<FrontPage> {
-  Future<List<ArticleModel>> futureArticles;
+  Future<ArticlesModel> futureArticles;
 
   @override
   void initState() {
@@ -44,7 +46,8 @@ class _FrontPageState extends State<FrontPage> {
               child: getArticleScoreStylizedText(context, article.score),
               margin: EdgeInsets.only(right: 8)),
           Container(
-              child: Text(timeago.format(article.time), style: Theme.of(context).textTheme.subtitle2),
+              child: Text(timeago.format(article.time),
+                  style: Theme.of(context).textTheme.subtitle2),
               margin: EdgeInsets.only(right: 8)),
           getReadableUrlWidget(context, article.url),
         ]),
@@ -62,9 +65,10 @@ class _FrontPageState extends State<FrontPage> {
   Widget _buildArticlesList() {
     return FutureBuilder(
       future: futureArticles,
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<ArticlesModel> snapshot) {
         // Detemine whether to render the loading/error state or the list
-        final int childCount = snapshot.hasData ? snapshot.data.length : 1;
+        final int childCount =
+            snapshot.hasData ? snapshot.data.articles.length : 1;
 
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -73,17 +77,33 @@ class _FrontPageState extends State<FrontPage> {
                 return getGenericErrorWidget(context);
               }
               if (snapshot.hasData == false || snapshot.hasData == null) {
-                return Center(child: CircularProgressIndicator());
+                return Padding(
+                  padding: EdgeInsets.only(left: 24, right: 24),
+                  child: Column(
+                    children: [
+                      const ShimmerText(
+                          height: 25, width: 150, marginBottom: 20),
+                      const ShimmerArticle(),
+                      const ShimmerArticle(),
+                      const ShimmerArticle(),
+                      const ShimmerArticle(),
+                      const ShimmerArticle(),
+                      const ShimmerArticle(),
+                    ],
+                  ),
+                );
               }
 
               final List<Widget> childrenToRender = [
-                _buildArticle(snapshot.data[i]),
+                _buildArticle(snapshot.data.articles[i]),
               ];
 
               // TODO: Add different categories
               if (i == 0) {
                 childrenToRender.insert(
-                    0, ArticleCategorySeparator(title: 'THE FRONTPAGE.', showSeparator: false));
+                    0,
+                    ArticleCategorySeparator(
+                        title: 'THE FRONTPAGE.', showSeparator: false));
               }
 
               if (i == 5) {
@@ -91,9 +111,7 @@ class _FrontPageState extends State<FrontPage> {
                     0, ArticleCategorySeparator(title: 'AROUND THE WEB.'));
               }
 
-              return Column(
-                children: [...childrenToRender]
-              );
+              return Column(children: [...childrenToRender]);
             },
             childCount: childCount,
           ),
@@ -107,7 +125,7 @@ class _FrontPageState extends State<FrontPage> {
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        FrontpageHeader(),
+        FrontPageHeader(articles: futureArticles),
         // SliverPadding(padding: EdgeInsets.all(5)),
         _buildArticlesList()
       ],
