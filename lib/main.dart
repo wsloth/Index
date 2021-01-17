@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:colorize_lumberdash/colorize_lumberdash.dart';
+import 'package:lumberdash/lumberdash.dart';
 import 'package:get/get.dart';
 import 'package:index/utils/theming.dart';
 
 import 'package:index/views/pages/front-page.dart';
 
 void main() {
+  putLumberdashToWork(withClients: [ColorizeLumberdash()]);
   runApp(IndexApp());
 }
 
@@ -26,22 +28,6 @@ Future<void> initDisplayMode() async {
   }
 }
 
-Future<void> initNavigationColors() async {
-  // Change the navigation element colors
-  Color navigationElementsColor = Get.isDarkMode ? Colors.black : Colors.white;
-  await FlutterStatusbarcolor.setStatusBarColor(navigationElementsColor, animate: true);
-  await FlutterStatusbarcolor.setNavigationBarColor(navigationElementsColor, animate: true);
-
-  // Check if we need to change the foreground color
-  if (useWhiteForeground(navigationElementsColor)) {
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
-  } else {
-    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
-  }
-}
-
 /// Entrypoint widget for the app. Configures
 /// global app theme and loads the first page.
 class IndexApp extends StatefulWidget {
@@ -55,7 +41,20 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initDisplayMode();
-    initNavigationColors();
+
+    // Not the most beautiful solution, but the theme context
+    // is not available yet during this lifecycle hook, so we
+    // can wait a tiny bit and set the right colors afterwards.
+    new Future.delayed(const Duration(milliseconds: 100), () {
+      Theming.alignNavigationElementThemeWithSystemBrightness();
+    });
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    // Change theme and force it to use dark
+    Theming.alignNavigationElementThemeWithSystemBrightness(
+        overrideToColor: Get.isDarkMode ? Colors.white : Colors.black);
   }
 
   @override
@@ -67,7 +66,7 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
   @override
   didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      initNavigationColors();
+      Theming.alignNavigationElementThemeWithSystemBrightness();
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -75,10 +74,11 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        theme: Theming.lightTheme(),
-        darkTheme: Theming.darkTheme(),
-        themeMode: Theming.getAppThemeMode(),
-        debugShowCheckedModeBanner: false,
-        home: FrontPage());
+      theme: Theming.lightTheme(),
+      darkTheme: Theming.darkTheme(),
+      themeMode: Theming.getAppThemeMode(),
+      debugShowCheckedModeBanner: false,
+      home: FrontPage(),
+    );
   }
 }
