@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:get/route_manager.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:get/get.dart';
 import 'package:index/utils/theming.dart';
 
 import 'package:index/views/pages/front-page.dart';
@@ -14,7 +15,7 @@ void main() {
 /// smoothnes...
 Future<void> initDisplayMode() async {
   try {
-    // Get all modes, and then choose the highest resolution & 
+    // Get all modes, and then choose the highest resolution &
     // the highest refresh rate mode
     var modes = await FlutterDisplayMode.supported;
     modes.sort((a, b) => b.height.compareTo(a.height));
@@ -25,6 +26,22 @@ Future<void> initDisplayMode() async {
   }
 }
 
+Future<void> initNavigationColors() async {
+  // Change the navigation element colors
+  Color navigationElementsColor = Get.isDarkMode ? Colors.black : Colors.white;
+  await FlutterStatusbarcolor.setStatusBarColor(navigationElementsColor, animate: true);
+  await FlutterStatusbarcolor.setNavigationBarColor(navigationElementsColor, animate: true);
+
+  // Check if we need to change the foreground color
+  if (useWhiteForeground(navigationElementsColor)) {
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
+  } else {
+    FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+    FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
+  }
+}
+
 /// Entrypoint widget for the app. Configures
 /// global app theme and loads the first page.
 class IndexApp extends StatefulWidget {
@@ -32,11 +49,27 @@ class IndexApp extends StatefulWidget {
   _IndexAppState createState() => _IndexAppState();
 }
 
-class _IndexAppState extends State<IndexApp> {
+class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     initDisplayMode();
+    initNavigationColors();
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      initNavigationColors();
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
