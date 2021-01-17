@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerText extends StatelessWidget {
@@ -19,16 +20,20 @@ class ShimmerText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color shimmerBase = Get.isDarkMode ? Colors.grey[850] : Colors.grey[300];
+    Color shimmerHighlight = Get.isDarkMode ? Colors.grey[700] : Colors.grey[100];
     return Column(children: [
-      Align(alignment: alignment, child: Shimmer.fromColors(
-        baseColor: Colors.grey[300],
-        highlightColor: Colors.grey[100],
-        child: Container(
-          width: width,
-          height: height,
-          color: Colors.white,
-        ),
-      )),
+      Align(
+          alignment: alignment,
+          child: Shimmer.fromColors(
+            baseColor: shimmerBase,
+            highlightColor: shimmerHighlight,
+            child: Container(
+              width: width,
+              height: height,
+              color: Colors.white,
+            ),
+          )),
       SizedBox(height: marginBottom),
     ]);
   }

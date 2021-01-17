@@ -82,7 +82,7 @@ class _FrontPageState extends State<FrontPage> {
                   child: Column(
                     children: [
                       const ShimmerText(
-                          height: 25, width: 150, marginBottom: 20),
+                          height: 25, width: 150, marginBottom: 24),
                       const ShimmerArticle(),
                       const ShimmerArticle(),
                       const ShimmerArticle(),
