@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:index/models/article-details-model.dart';
+import 'package:index/services/article-service.dart';
+import 'package:index/widgets/error.dart';
 import 'package:index/widgets/separator.dart';
+import 'package:index/widgets/shimmer.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -23,12 +27,25 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends State<ArticlePage> {
   final ArticleModel article;
-
+  Future<ArticleDetailsModel> articleDetails;
   bool webviewIsLoading = false;
 
   _ArticlePageState(this.article);
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchArticleDetails();
+  }
+
+  _fetchArticleDetails() async {
+    final service = ArticleService();
+    articleDetails = service.fetchArticleDetails(article);
+  }
+
+  /// Constructs the page body, which is shown "below" the sliding panel
   Widget _constructPageBody() {
+    // TODO: Default padding on the bottom where the slider overlaps
     if (article.url != null) {
       return WebView(
         initialUrl: article.url,
@@ -49,12 +66,80 @@ class _ArticlePageState extends State<ArticlePage> {
     return Html(data: article.text);
   }
 
+  /// Recursively builds comments, with their responses
+  Widget _constructComment(ArticleCommentModel comment, bool hasParent) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The reply depth indicator
+          hasParent
+              ? Container(
+                  width: 4,
+                  // height: 100,
+                  margin: EdgeInsets.only(right: 5),
+                  color: Colors.grey.withOpacity(.5),
+                )
+              : Container(),
+
+          // The actual comment content
+          Expanded(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Text(
+                      comment.author,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Html(data: comment.text),
+                Column(
+                    children: comment.responses
+                        .map((r) => _constructComment(r, true))
+                        .toList()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _constructCommentSection() {
+    return FutureBuilder<ArticleDetailsModel>(
+      future: articleDetails,
+      builder:
+          (BuildContext context, AsyncSnapshot<ArticleDetailsModel> snapshot) {
+        if (snapshot.hasError) {
+          return getGenericErrorWidget(context);
+        }
+        if (snapshot.hasData == null || snapshot.hasData == false) {
+          return Stack(children: [
+            const ShimmerArticle(),
+            const ShimmerArticle(),
+            const ShimmerArticle(),
+          ]);
+        }
+
+        List<Widget> topLevelComments = snapshot.data.comments
+            .map((c) => _constructComment(c, false))
+            .toList();
+        return Column(children: [
+          ...topLevelComments,
+        ]);
+      },
+    );
+  }
+
   Widget _constructSlidingSheet() {
     final articleHasUrl = article.url != null;
     final articleHasBody = article.text != null;
     return Container(
       padding: EdgeInsets.all(20),
-      height: 1000,
       child: Column(
         children: [
           Align(
@@ -113,6 +198,7 @@ class _ArticlePageState extends State<ArticlePage> {
             ],
           ),
           Separator(),
+          _constructCommentSection(),
         ],
       ),
     );
@@ -131,13 +217,15 @@ class _ArticlePageState extends State<ArticlePage> {
               if (await canLaunch(article.url)) {
                 await launch(article.url);
               } else {
-                Get.snackbar('Error', 'Unable to open url. Please try again later or contact the developer.');
+                Get.snackbar('Error',
+                    'Unable to open url. Please try again later or contact the developer.');
               }
             },
           ),
         ],
       ),
       body: LoadingOverlay(
+        // TODO: Don't block slidingsheet, if possible
         isLoading: webviewIsLoading,
         child: SlidingSheet(
           elevation: 10,

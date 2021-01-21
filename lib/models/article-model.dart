@@ -1,5 +1,4 @@
 class ArticleModel {
-
   // TODO: Add more friendly property names that can be used with multiple news sources
   final String author;
   final String title;
@@ -9,7 +8,7 @@ class ArticleModel {
   final String text;
   final String type;
   final int descendants;
-  final List<dynamic> kids;
+  final List<int> responseIds;
 
   ArticleModel({
     this.author,
@@ -20,11 +19,16 @@ class ArticleModel {
     this.text,
     this.type,
     this.descendants,
-    this.kids,
+    this.responseIds,
   });
 
   factory ArticleModel.fromJson(Map<String, dynamic> json) {
     final int time = json['time'] as int;
+    
+    List<int> responseIds = List<int>();
+    if (json['kids'] != null)
+      responseIds = List<int>.from(json['kids'].map((x) => x));
+
     return ArticleModel(
       author: json['by'],
       title: json['title'],
@@ -34,8 +38,7 @@ class ArticleModel {
       text: json['text'],
       type: json['type'],
       descendants: json['descendants'],
-      // TODO: Cast to List<int> or some sort of observable
-      kids: json['kids'],
+      responseIds: responseIds,
     );
   }
 }
