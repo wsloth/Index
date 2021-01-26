@@ -226,7 +226,7 @@ class _ArticlePageState extends State<ArticlePage> {
       ),
       body: LoadingOverlay(
         // TODO: Don't block slidingsheet, if possible
-        isLoading: webviewIsLoading,
+        isLoading: false, // webviewIsLoading,
         child: SlidingSheet(
           elevation: 10,
           // Configure snapping the overlay to the bottom of the screen
