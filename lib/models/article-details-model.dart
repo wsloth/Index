@@ -21,6 +21,7 @@ class ArticleCommentModel {
   });
 
   factory ArticleCommentModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     final int time = json['time'] as int;
     List<int> responseIds = List<int>();
     if (json['kids'] != null)

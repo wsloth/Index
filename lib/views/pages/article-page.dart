@@ -7,7 +7,6 @@ import 'package:index/services/article-service.dart';
 import 'package:index/widgets/error.dart';
 import 'package:index/widgets/separator.dart';
 import 'package:index/widgets/shimmer.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -27,7 +26,7 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends State<ArticlePage> {
   final ArticleModel article;
-  Future<ArticleDetailsModel> articleDetails;
+  Stream<List<ArticleCommentModel>> commentSectionStream;
   bool webviewIsLoading = false;
 
   _ArticlePageState(this.article);
@@ -40,7 +39,7 @@ class _ArticlePageState extends State<ArticlePage> {
 
   _fetchArticleDetails() async {
     final service = ArticleService();
-    articleDetails = service.fetchArticleDetails(article);
+    commentSectionStream = service.streamCommentSectionAsync(article);
   }
 
   /// Constructs the page body, which is shown "below" the sliding panel
@@ -91,12 +90,12 @@ class _ArticlePageState extends State<ArticlePage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
-                      comment.author,
+                      comment.author != null ? comment.author : '<NULL>',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-                Html(data: comment.text),
+                Html(data: comment.text != null ? comment.text : "<NULL>"),
                 Column(
                     children: comment.responses
                         .map((r) => _constructComment(r, true))
@@ -110,27 +109,34 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   Widget _constructCommentSection() {
-    return FutureBuilder<ArticleDetailsModel>(
-      future: articleDetails,
-      builder:
-          (BuildContext context, AsyncSnapshot<ArticleDetailsModel> snapshot) {
+    return StreamBuilder<List<ArticleCommentModel>>(
+      stream: commentSectionStream,
+      builder: (BuildContext context,
+          AsyncSnapshot<List<ArticleCommentModel>> snapshot) {
         if (snapshot.hasError) {
           return getGenericErrorWidget(context);
         }
         if (snapshot.hasData == null || snapshot.hasData == false) {
-          return Stack(children: [
+          return Column(children: [
+            const ShimmerArticle(),
+            const ShimmerArticle(),
+            const ShimmerArticle(),
+            const ShimmerArticle(),
+            const ShimmerArticle(),
             const ShimmerArticle(),
             const ShimmerArticle(),
             const ShimmerArticle(),
           ]);
         }
 
-        List<Widget> topLevelComments = snapshot.data.comments
-            .map((c) => _constructComment(c, false))
-            .toList();
-        return Column(children: [
-          ...topLevelComments,
-        ]);
+        // Efficiently construct list of all comments
+        return ListView.builder(
+          shrinkWrap: true,
+            // padding: const EdgeInsets.all(8),
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _constructComment(snapshot.data[index], false);
+            });
       },
     );
   }
@@ -183,21 +189,9 @@ class _ArticlePageState extends State<ArticlePage> {
           // Optional text content
           articleHasBody ? SizedBox(height: 8) : Container(),
           articleHasBody ? Html(data: article.text) : Container(),
-          SizedBox(height: 8),
-
-          // Action bar
+          SizedBox(height: 12),
           Separator(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(Icons.keyboard_arrow_up),
-              Icon(Icons.keyboard_arrow_down),
-              Icon(Icons.share),
-              Icon(Icons.star_border),
-              Icon(Icons.open_in_browser),
-            ],
-          ),
-          Separator(),
+          SizedBox(height: 12),
           _constructCommentSection(),
         ],
       ),
@@ -210,6 +204,15 @@ class _ArticlePageState extends State<ArticlePage> {
       appBar: AppBar(
         title: Text(article.title),
         actions: [
+          // Share
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: 'Share',
+            onPressed: () async {
+              Get.snackbar('Sorry...', 'Sharing is not supported yet.');
+            },
+          ),
+          // Open in browser
           IconButton(
             icon: const Icon(Icons.open_in_browser),
             tooltip: 'Open in browser',
@@ -224,24 +227,20 @@ class _ArticlePageState extends State<ArticlePage> {
           ),
         ],
       ),
-      body: LoadingOverlay(
-        // TODO: Don't block slidingsheet, if possible
-        isLoading: false, // webviewIsLoading,
-        child: SlidingSheet(
-          elevation: 10,
-          // Configure snapping the overlay to the bottom of the screen
-          snapSpec: const SnapSpec(
-            snap: true,
-            snappings: [0.15, 0.4, 1.0],
-            positioning: SnapPositioning.relativeToAvailableSpace,
-          ),
-          // The widget "below" the sliding sheet
-          body: _constructPageBody(),
-          // Content of the sliding sheet
-          builder: (context, state) {
-            return _constructSlidingSheet();
-          },
+      body: SlidingSheet(
+        elevation: 10,
+        // Configure snapping the overlay to the bottom of the screen
+        snapSpec: const SnapSpec(
+          snap: true,
+          snappings: [0.15, 0.4, 1.0],
+          positioning: SnapPositioning.relativeToAvailableSpace,
         ),
+        // The widget "below" the sliding sheet
+        body: _constructPageBody(),
+        // Content of the sliding sheet
+        builder: (context, state) {
+          return _constructSlidingSheet();
+        },
       ),
     );
   }

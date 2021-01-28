@@ -47,7 +47,6 @@ class ArticleService {
   /// their children too
   Future<List<ArticleCommentModel>> fetchChildObjectsRecursively(
       List<int> childIds) async {
-
     // Fetch all comments in the array
     List<Future<ArticleCommentModel>> apiCalls = [];
     for (int articleChildId in childIds) {
@@ -58,7 +57,8 @@ class ArticleService {
     // Fetch all comment responses
     List<Future<void>> responseCalls = [];
     for (var comment in comments) {
-      responseCalls.add(fetchChildObjectsRecursively(comment.responseIds).then((value) => comment.responses = value));
+      responseCalls.add(fetchChildObjectsRecursively(comment.responseIds)
+          .then((value) => comment.responses = value));
     }
     await Future.wait(responseCalls);
 
@@ -69,5 +69,39 @@ class ArticleService {
     final articleResponse =
         await http.get(baseUrl + 'item/' + childId.toString() + '.json');
     return ArticleCommentModel.fromJson(jsonDecode(articleResponse.body));
+  }
+
+  Stream<List<ArticleCommentModel>> streamCommentSectionAsync(
+      ArticleModel article) async* {
+    List<ArticleCommentModel> allComments = [];
+    for (int articleChildId in article.responseIds) {
+      var topLevelComment = await fetchCommentThread(articleChildId);
+      allComments.add(topLevelComment);
+      yield allComments;
+    }
+  }
+
+  Future<ArticleCommentModel> fetchCommentThread(int topLevelCommentId) async {
+    var recurse = (List<int> childIds) async {
+      List<Future<ArticleCommentModel>> apiCalls = [];
+      for (int articleChildId in childIds) {
+        apiCalls.add(fetchChildObject(articleChildId));
+      }
+      List<ArticleCommentModel> comments = await Future.wait(apiCalls);
+
+      // Fetch all comment responses
+      List<Future<void>> responseCalls = [];
+      for (var comment in comments) {
+        responseCalls.add(fetchChildObjectsRecursively(comment.responseIds)
+            .then((value) => comment.responses = value));
+      }
+      await Future.wait(responseCalls);
+
+      return comments;
+    };
+
+    // Fetch the entire comment thread for the top level comment
+    var commentThread = await recurse([topLevelCommentId]);
+    return commentThread[0]; // There is only one toplevel comment
   }
 }
