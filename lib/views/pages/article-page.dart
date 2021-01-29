@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -8,12 +9,12 @@ import 'package:index/widgets/error.dart';
 import 'package:index/widgets/separator.dart';
 import 'package:index/widgets/shimmer.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:index/models/article-model.dart';
-import 'package:index/widgets/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'article/slider-widgets.dart';
 
 class ArticlePage extends StatefulWidget {
   final ArticleModel article;
@@ -131,8 +132,8 @@ class _ArticlePageState extends State<ArticlePage> {
 
         // Efficiently construct list of all comments
         return ListView.builder(
-          shrinkWrap: true,
-            // padding: const EdgeInsets.all(8),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
               return _constructComment(snapshot.data[index], false);
@@ -142,46 +143,33 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   Widget _constructSlidingSheet() {
-    final articleHasUrl = article.url != null;
     final articleHasBody = article.text != null;
     return Container(
-      padding: EdgeInsets.all(20),
+      color: Get.isDarkMode ? Colors.black : Colors.white,
+      padding: EdgeInsets.only(left: 20, right: 20, bottom: 40),
+      // decoration: BoxDecoration(
+      //   border: Border( top: BorderSide(width: 1, color: Colors.grey))
+      // ),
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: 20,
-              height: 5,
-              color: Colors.grey.withOpacity(.5),
-            ),
-          ),
-
           // Title
           const SizedBox(height: 12),
-          Text(article.title, style: Theme.of(context).textTheme.headline5),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AutoSizeText(article.title,
+                maxLines: 3,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    .copyWith(fontSize: 40)),
+          ),
           const SizedBox(height: 12),
-
-          // Full URL
-          articleHasUrl
-              ? Text(article.url, style: TextStyle(fontSize: 14))
-              : Container(),
-          articleHasUrl ? SizedBox(height: 12) : Container(),
 
           // Infobar
           Container(
             child: Row(children: [
               Container(
-                  child: getArticleScoreStylizedText(context, article.score),
-                  margin: EdgeInsets.only(right: 8)),
-              Container(
-                  child: Text(timeago.format(article.time)),
-                  margin: EdgeInsets.only(right: 8)),
-              Container(
-                  child: Text("${article.descendants} comments"),
-                  margin: EdgeInsets.only(right: 8)),
-              Container(
-                  child: Text("By: ${article.author}"),
+                  child: Text("Submitted by ${article.author}"),
                   margin: EdgeInsets.only(right: 8)),
             ]),
           ),
@@ -202,7 +190,9 @@ class _ArticlePageState extends State<ArticlePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.title),
+        title: Text("Article"),
+        centerTitle: true,
+        backgroundColor: Get.isDarkMode ? Colors.black : Colors.white,
         actions: [
           // Share
           IconButton(
@@ -229,15 +219,21 @@ class _ArticlePageState extends State<ArticlePage> {
       ),
       body: SlidingSheet(
         elevation: 10,
+        liftOnScrollHeaderElevation: 2,
+        cornerRadius: 32,
+        cornerRadiusOnFullscreen: 0,
         // Configure snapping the overlay to the bottom of the screen
         snapSpec: const SnapSpec(
           snap: true,
-          snappings: [0.15, 0.4, 1.0],
+          snappings: [SnapSpec.headerSnap, SnapSpec.expanded],
           positioning: SnapPositioning.relativeToAvailableSpace,
         ),
         // The widget "below" the sliding sheet
         body: _constructPageBody(),
-        // Content of the sliding sheet
+        // Sliding sheet header
+        headerBuilder: (_, __) => IndexSlidingSheetHeader(article: article),
+
+        // Sliding sheet content
         builder: (context, state) {
           return _constructSlidingSheet();
         },
