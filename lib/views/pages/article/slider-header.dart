@@ -37,7 +37,7 @@ class IndexSlidingSheetHeader extends StatelessWidget {
     return Container(
       height: HEADER_HEIGHT,
       width: double.infinity,
-      color: Get.theme.bannerTheme.backgroundColor,
+      color: Get.isDarkMode ? Colors.black : Colors.white,
       //  decoration: BoxDecoration(
       //   border: Border( bottom: BorderSide(width: 1, color: Colors.grey))
       // ),

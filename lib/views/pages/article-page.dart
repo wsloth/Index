@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:index/models/article-details-model.dart';
 import 'package:index/services/article-service.dart';
+import 'package:index/views/pages/article/comment-section.dart';
 import 'package:index/widgets/error.dart';
 import 'package:index/widgets/separator.dart';
 import 'package:index/widgets/shimmer.dart';
@@ -14,7 +15,7 @@ import 'package:index/models/article-model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'article/slider-widgets.dart';
+import 'article/slider-header.dart';
 
 class ArticlePage extends StatefulWidget {
   final ArticleModel article;
@@ -66,90 +67,12 @@ class _ArticlePageState extends State<ArticlePage> {
     return Html(data: article.text);
   }
 
-  /// Recursively builds comments, with their responses
-  Widget _constructComment(ArticleCommentModel comment, bool hasParent) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // The reply depth indicator
-          hasParent
-              ? Container(
-                  width: 4,
-                  // height: 100,
-                  margin: EdgeInsets.only(right: 5),
-                  color: Colors.grey.withOpacity(.5),
-                )
-              : Container(),
-
-          // The actual comment content
-          Expanded(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      comment.author != null ? comment.author : '<NULL>',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Html(data: comment.text != null ? comment.text : "<NULL>"),
-                Column(
-                    children: comment.responses
-                        .map((r) => _constructComment(r, true))
-                        .toList()),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _constructCommentSection() {
-    return StreamBuilder<List<ArticleCommentModel>>(
-      stream: commentSectionStream,
-      builder: (BuildContext context,
-          AsyncSnapshot<List<ArticleCommentModel>> snapshot) {
-        if (snapshot.hasError) {
-          return getGenericErrorWidget(context);
-        }
-        if (snapshot.hasData == null || snapshot.hasData == false) {
-          return Column(children: [
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-            const ShimmerArticle(),
-          ]);
-        }
-
-        // Efficiently construct list of all comments
-        return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _constructComment(snapshot.data[index], false);
-            });
-      },
-    );
-  }
 
   Widget _constructSlidingSheet() {
     final articleHasBody = article.text != null;
     return Container(
       color: Get.isDarkMode ? Colors.black : Colors.white,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: 40),
-      // decoration: BoxDecoration(
-      //   border: Border( top: BorderSide(width: 1, color: Colors.grey))
-      // ),
       child: Column(
         children: [
           // Title
@@ -180,7 +103,8 @@ class _ArticlePageState extends State<ArticlePage> {
           SizedBox(height: 12),
           Separator(),
           SizedBox(height: 12),
-          _constructCommentSection(),
+
+          IndexCommentSection(commentSectionStream: commentSectionStream),
         ],
       ),
     );
