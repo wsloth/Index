@@ -37,20 +37,17 @@ class IndexComment extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                      comment.author != null ? comment.author : '<NULL>',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    comment.author != null ? comment.author : '<NULL>',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                
                 SizedBox(height: 8),
-
                 Html(
                   data: comment.text != null ? comment.text : "<NULL>",
                   style: {
                     "body": Style(margin: EdgeInsets.all(0)),
                   },
                 ),
-
                 Column(
                     children: comment.responses
                         .map((r) => _buildComment(r, true))
@@ -65,6 +62,9 @@ class IndexComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildComment(comment, false);
+    return Container(
+      margin: EdgeInsets.only(bottom: 24),
+      child: _buildComment(comment, false),
+    );
   }
 }

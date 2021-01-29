@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_html/style.dart';
 import 'package:get/get.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:index/models/article-details-model.dart';
@@ -67,7 +68,6 @@ class _ArticlePageState extends State<ArticlePage> {
     return Html(data: article.text);
   }
 
-
   Widget _constructSlidingSheet() {
     final articleHasBody = article.text != null;
     return Container(
@@ -98,11 +98,18 @@ class _ArticlePageState extends State<ArticlePage> {
           ),
 
           // Optional text content
-          articleHasBody ? SizedBox(height: 8) : Container(),
-          articleHasBody ? Html(data: article.text) : Container(),
-          SizedBox(height: 12),
-          Separator(),
-          SizedBox(height: 12),
+          // TODO: Place sliding sheet title + body in page, hide in sheet?
+          // TODO: Or, render the sliding sheet content in the full page!
+          articleHasBody ? SizedBox(height: 24) : Container(),
+          articleHasBody
+              ? Html(
+                  data: article.text,
+                  style: {
+                    "body": Style(margin: EdgeInsets.all(0)),
+                  },
+                )
+              : Container(),
+          SizedBox(height: 24),
 
           IndexCommentSection(commentSectionStream: commentSectionStream),
         ],
