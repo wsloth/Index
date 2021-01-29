@@ -116,6 +116,7 @@ class _ArticlePageState extends State<ArticlePage> {
       appBar: AppBar(
         title: Text("Article"),
         centerTitle: true,
+        elevation: 1,
         backgroundColor: Get.isDarkMode ? Colors.black : Colors.white,
         actions: [
           // Share
@@ -142,8 +143,8 @@ class _ArticlePageState extends State<ArticlePage> {
         ],
       ),
       body: SlidingSheet(
-        elevation: 10,
-        liftOnScrollHeaderElevation: 2,
+        elevation: 8,
+        liftOnScrollHeaderElevation: 8,
         cornerRadius: 32,
         cornerRadiusOnFullscreen: 0,
         // Configure snapping the overlay to the bottom of the screen

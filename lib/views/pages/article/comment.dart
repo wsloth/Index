@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:index/models/article-details-model.dart';
 
 /// Widget for a comment thread - a parent comment and all it's
@@ -35,15 +36,21 @@ class IndexComment extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
+                  child: Text(
                       comment.author != null ? comment.author : '<NULL>',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
                 ),
-                Html(data: comment.text != null ? comment.text : "<NULL>"),
+                
+                SizedBox(height: 8),
+
+                Html(
+                  data: comment.text != null ? comment.text : "<NULL>",
+                  style: {
+                    "body": Style(margin: EdgeInsets.all(0)),
+                  },
+                ),
+
                 Column(
                     children: comment.responses
                         .map((r) => _buildComment(r, true))
