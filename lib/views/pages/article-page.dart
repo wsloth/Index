@@ -129,14 +129,14 @@ class _ArticlePageState extends State<ArticlePage> {
         elevation: 1,
         backgroundColor: Get.isDarkMode ? Colors.black : Colors.white,
         actions: [
-          // Share
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: 'Share',
-            onPressed: () async {
-              Get.snackbar('Sorry...', 'Sharing is not supported yet.');
-            },
-          ),
+          // TODO: Share button
+          // IconButton(
+          //   icon: const Icon(Icons.share),
+          //   tooltip: 'Share',
+          //   onPressed: () async {
+          //     Get.snackbar('Sorry...', 'Sharing is not supported yet.');
+          //   },
+          // ),
           // Open in browser
           IconButton(
             icon: const Icon(Icons.open_in_browser),

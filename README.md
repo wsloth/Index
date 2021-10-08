@@ -2,7 +2,9 @@
 
 ![Index CI/CD](https://github.com/wsloth/Index/workflows/Index%20CI/CD/badge.svg)
 
-More details & store links coming soon.
+The Index is a simple Hacker News reader app which is focused on making you read less, by only showing you the top stories of the last 24 hours.
+
+![screenshot of app](/docs/screenshot.png)
 
 ## Developing
 

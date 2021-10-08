@@ -67,7 +67,7 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
       pinned: true,
       // leading: IconButton(icon: Icon(Icons.settings)),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      expandedHeight: 300,
+      expandedHeight: 275,
       elevation: 3,
       flexibleSpace: CustomizableSpaceBar(
         builder: (context, scrollingRate) {
