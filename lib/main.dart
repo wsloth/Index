@@ -17,12 +17,7 @@ void main() {
 /// smoothnes...
 Future<void> initDisplayMode() async {
   try {
-    // Get all modes, and then choose the highest resolution &
-    // the highest refresh rate mode
-    var modes = await FlutterDisplayMode.supported;
-    modes.sort((a, b) => b.height.compareTo(a.height));
-    modes.sort((a, b) => b.refreshRate.compareTo(a.refreshRate));
-    return await FlutterDisplayMode.setMode(modes[0]);
+    return await FlutterDisplayMode.setHighRefreshRate();
   } catch (e) {
     print(e);
   }

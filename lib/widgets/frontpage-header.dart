@@ -40,20 +40,23 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
             Text(formatter.format(snapshot.data.lastUpdated),
                 style: Theme.of(context).textTheme.headline2),
             SizedBox(height: 10),
-            Text('Vol. No. 00013',
-                style: Theme.of(context).textTheme.headline2),
+            // TODO: Add volume name that increments every day
+            // Text('Vol. No. 00013',
+            //     style: Theme.of(context).textTheme.headline2),
             SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(icon: Icon(Icons.refresh)),
-                SizedBox(width: 16),
-                IconButton(icon: Icon(Icons.sort)),
-                SizedBox(width: 16),
-                IconButton(icon: Icon(Icons.settings)),
-              ],
-            ),
+
+            // TODO: Add icon row for additional filters & settings
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[
+            //     IconButton(icon: Icon(Icons.refresh)),
+            //     SizedBox(width: 16),
+            //     IconButton(icon: Icon(Icons.sort)),
+            //     SizedBox(width: 16),
+            //     IconButton(icon: Icon(Icons.settings)),
+            //   ],
+            // ),
           ]);
         });
   }
@@ -64,7 +67,7 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
       pinned: true,
       // leading: IconButton(icon: Icon(Icons.settings)),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      expandedHeight: 300,
+      expandedHeight: 275,
       elevation: 3,
       flexibleSpace: CustomizableSpaceBar(
         builder: (context, scrollingRate) {

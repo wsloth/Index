@@ -12,7 +12,7 @@ class ArticleService {
   /// Fetches the "front page" of the app: the 50 top stories on
   /// hacker news currently.
   Future<ArticlesModel> fetchFrontPage() async {
-    final response = await http.get(baseUrl + 'topstories.json');
+    final response = await http.get(Uri.parse(baseUrl + 'topstories.json'));
     final List<dynamic> articleIds = jsonDecode(response.body);
 
     List<Future<ArticleModel>> apiCalls = [];
@@ -33,7 +33,7 @@ class ArticleService {
   /// Fetches a single story by their id
   Future<ArticleModel> fetchArticle(int articleId) async {
     final articleResponse =
-        await http.get(baseUrl + 'item/' + articleId.toString() + '.json');
+        await http.get(Uri.parse(baseUrl + 'item/' + articleId.toString() + '.json'));
     return ArticleModel.fromJson(jsonDecode(articleResponse.body));
   }
 
@@ -67,7 +67,7 @@ class ArticleService {
 
   Future<ArticleCommentModel> fetchChildObject(int childId) async {
     final articleResponse =
-        await http.get(baseUrl + 'item/' + childId.toString() + '.json');
+        await http.get(Uri.parse(baseUrl + 'item/' + childId.toString() + '.json'));
     return ArticleCommentModel.fromJson(jsonDecode(articleResponse.body));
   }
 

@@ -49,19 +49,22 @@ class _ArticlePageState extends State<ArticlePage> {
   Widget _constructPageBody() {
     // TODO: Default padding on the bottom where the slider overlaps
     if (article.url != null) {
-      return WebView(
-        initialUrl: article.url,
-        onPageStarted: (url) {
-          setState(() {
-            webviewIsLoading = true;
-          });
-        },
-        onPageFinished: (url) {
-          setState(() {
-            webviewIsLoading = false;
-          });
-        },
-        javascriptMode: JavascriptMode.unrestricted,
+      return Container(
+        padding: EdgeInsets.only(bottom: 44),
+        child: WebView(
+          initialUrl: article.url,
+          onPageStarted: (url) {
+            setState(() {
+              webviewIsLoading = true;
+            });
+          },
+          onPageFinished: (url) {
+            setState(() {
+              webviewIsLoading = false;
+            });
+          },
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
       );
     }
 
@@ -126,14 +129,14 @@ class _ArticlePageState extends State<ArticlePage> {
         elevation: 1,
         backgroundColor: Get.isDarkMode ? Colors.black : Colors.white,
         actions: [
-          // Share
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: 'Share',
-            onPressed: () async {
-              Get.snackbar('Sorry...', 'Sharing is not supported yet.');
-            },
-          ),
+          // TODO: Share button
+          // IconButton(
+          //   icon: const Icon(Icons.share),
+          //   tooltip: 'Share',
+          //   onPressed: () async {
+          //     Get.snackbar('Sorry...', 'Sharing is not supported yet.');
+          //   },
+          // ),
           // Open in browser
           IconButton(
             icon: const Icon(Icons.open_in_browser),
@@ -150,9 +153,9 @@ class _ArticlePageState extends State<ArticlePage> {
         ],
       ),
       body: SlidingSheet(
-        elevation: 8,
+        elevation: 20,
         liftOnScrollHeaderElevation: 8,
-        cornerRadius: 32,
+        cornerRadius: 24,
         cornerRadiusOnFullscreen: 0,
         // Configure snapping the overlay to the bottom of the screen
         snapSpec: const SnapSpec(
