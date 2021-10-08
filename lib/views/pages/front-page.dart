@@ -41,7 +41,7 @@ class _FrontPageState extends State<FrontPage> {
       ),
       subtitle: Container(
         margin: EdgeInsets.only(top: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.baseline, children: [
+        child: Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
           Container(
               child: getArticleScoreStylizedText(context, article.score),
               margin: EdgeInsets.only(right: 8)),
@@ -123,7 +123,7 @@ class _FrontPageState extends State<FrontPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
+      body: CustomScrollView(
       slivers: [
         FrontPageHeader(articles: futureArticles),
         // SliverPadding(padding: EdgeInsets.all(5)),
