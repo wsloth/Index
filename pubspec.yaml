@@ -23,20 +23,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get: ^3.24.0
-  http: ^0.12.2
-  timeago: ^2.0.29
-  flutter_html: ^1.1.0
-  flutter_displaymode: ^0.1.1
-  customizable_space_bar: ^0.1.0
-  google_fonts: ^1.1.1
-  sliding_sheet: ^0.4.1
-  webview_flutter: ^1.0.7
-  url_launcher: ^5.7.10
+  get: ^4.3.8
+  http: ^0.13.4
+  timeago: ^3.1.0
+  flutter_html: ^2.1.5
+  flutter_displaymode: ^0.3.2
+  customizable_space_bar: ^0.2.0
+  google_fonts: ^2.1.0
+  sliding_sheet: ^0.5.0
+  webview_flutter: ^2.1.1
+  url_launcher: ^6.0.12
   flutter_statusbarcolor: ^0.2.3
-  lumberdash: ^2.1.1
-  colorize_lumberdash: ^2.1.0
-  shimmer: ^1.1.2
+  lumberdash: ^3.0.0
+  colorize_lumberdash: ^3.0.0
+  shimmer: ^2.0.0
   auto_size_text: ^2.1.0
   intl: ^0.17.0
 
