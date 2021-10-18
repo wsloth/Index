@@ -5,7 +5,7 @@ import 'package:lumberdash/lumberdash.dart';
 import 'package:get/get.dart';
 import 'package:index/utils/theming.dart';
 
-import 'package:index/views/pages/front-page.dart';
+import 'package:index/views/pages/onboarding_screen.dart';
 
 void main() {
   putLumberdashToWork(withClients: [ColorizeLumberdash()]);
@@ -73,7 +73,7 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
       darkTheme: Theming.darkTheme(),
       themeMode: Theming.getAppThemeMode(),
       debugShowCheckedModeBanner: false,
-      home: FrontPage(),
+      home: OnboardingScreen(),
     );
   }
 }
