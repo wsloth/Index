@@ -33,7 +33,6 @@ dependencies:
   sliding_sheet: ^0.5.0
   webview_flutter: ^2.1.1
   url_launcher: ^6.0.12
-  flutter_statusbarcolor: ^0.2.3
   lumberdash: ^3.0.0
   colorize_lumberdash: ^3.0.0
   shimmer: ^2.0.0
