@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lumberdash/lumberdash.dart';
 
 class Theming {
   /// Check if we are running in dark or light mode
