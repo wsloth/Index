@@ -71,7 +71,7 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
     return GetMaterialApp(
       theme: Theming.lightTheme(),
       darkTheme: Theming.darkTheme(),
-      themeMode: Theming.getAppThemeMode(),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: FrontPage(),
     );
