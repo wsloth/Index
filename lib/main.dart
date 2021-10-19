@@ -36,20 +36,6 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initDisplayMode();
-
-    // Not the most beautiful solution, but the theme context
-    // is not available yet during this lifecycle hook, so we
-    // can wait a tiny bit and set the right colors afterwards.
-    new Future.delayed(const Duration(milliseconds: 100), () {
-      Theming.alignNavigationElementThemeWithSystemBrightness();
-    });
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    // Change theme and force it to use dark
-    Theming.alignNavigationElementThemeWithSystemBrightness(
-        overrideToColor: Get.isDarkMode ? Colors.white : Colors.black);
   }
 
   @override
@@ -59,19 +45,11 @@ class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
   }
 
   @override
-  didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Theming.alignNavigationElementThemeWithSystemBrightness();
-    }
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: Theming.lightTheme(),
       darkTheme: Theming.darkTheme(),
-      themeMode: Theming.getAppThemeMode(),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: FrontPage(),
     );
