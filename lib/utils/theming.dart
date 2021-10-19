@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lumberdash/lumberdash.dart';
@@ -74,28 +73,28 @@ class Theming {
     );
   }
 
-  // ignore: avoid_init_to_null
-  static Future<void> alignNavigationElementThemeWithSystemBrightness({Color overrideToColor}) async {
-    // Change the navigation element colors
-    Color navigationElementsColor = Get.isDarkMode ? Colors.black : Colors.white;
-    if (overrideToColor != null) {
-      navigationElementsColor = overrideToColor;
-    }
+  // // ignore: avoid_init_to_null
+  // static Future<void> alignNavigationElementThemeWithSystemBrightness({Color overrideToColor}) async {
+  //   // Change the navigation element colors
+  //   Color navigationElementsColor = Get.isDarkMode ? Colors.black : Colors.white;
+  //   if (overrideToColor != null) {
+  //     navigationElementsColor = overrideToColor;
+  //   }
 
-    logMessage('Changing navigation elements color to ${navigationElementsColor.toString()}');
+  //   logMessage('Changing navigation elements color to ${navigationElementsColor.toString()}');
 
-    await FlutterStatusbarcolor.setStatusBarColor(navigationElementsColor,
-        animate: true);
-    await FlutterStatusbarcolor.setNavigationBarColor(navigationElementsColor,
-        animate: true);
+  //   await FlutterStatusbarcolor.setStatusBarColor(navigationElementsColor,
+  //       animate: true);
+  //   await FlutterStatusbarcolor.setNavigationBarColor(navigationElementsColor,
+  //       animate: true);
 
-    // Check if we need to change the foreground color
-    if (useWhiteForeground(navigationElementsColor)) {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-      FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
-    } else {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-      FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
-    }
-  }
+  //   // Check if we need to change the foreground color
+  //   if (useWhiteForeground(navigationElementsColor)) {
+  //     FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  //     FlutterStatusbarcolor.setNavigationBarWhiteForeground(true);
+  //   } else {
+  //     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+  //     FlutterStatusbarcolor.setNavigationBarWhiteForeground(false);
+  //   }
+  // }
 }
