@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:colorize_lumberdash/colorize_lumberdash.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lumberdash/lumberdash.dart';
 import 'package:get/get.dart';
 import 'package:index/utils/theming.dart';
 
 import 'package:index/views/pages/onboarding_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+import 'models/articles-data-hive_model.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   putLumberdashToWork(withClients: [ColorizeLumberdash()]);
+
+  // Initialise Hive
+  final documentDirectory = await getApplicationDocumentsDirectory();
+  Hive.init(documentDirectory.path);
+  Hive.registerAdapter(ArticlesDataHiveModelAdapter());
+  await Hive.openBox<ArticlesDataHiveModel>('articlesData');
+
   runApp(IndexApp());
 }
 
