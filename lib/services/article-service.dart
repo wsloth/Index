@@ -30,14 +30,14 @@ class ArticleService {
 
   /// Fetches the "front page" of the app: the 50 top stories on
   /// hacker news currently.
-  Future<ArticlesModel> fetchFrontPage() async {
+  Future<ArticlesModel> fetchFrontPage({bool forceRefresh = false}) async {
     bool getCachedData = false;
     List<int> articleIds;
 
     articlesBox = Hive.box<ArticlesDataHiveModel>('articlesData');
     ArticlesDataHiveModel articlesData;
 
-    if (articlesBox.isNotEmpty) {
+    if (!forceRefresh && articlesBox.isNotEmpty) {
       // stored data is available
       articlesData = articlesBox.get('data');
 
@@ -61,6 +61,8 @@ class ArticleService {
       // when - App is opened for the first time after install or cleaning app-data.
       articleIds = await _getDataFromAPI();
     }
+
+    articlesData = articlesBox.get('data');
 
     List<Future<ArticleModel>> apiCalls = [];
     for (int articleId in articleIds.take(50)) {
