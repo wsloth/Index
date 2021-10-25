@@ -8,34 +8,35 @@ import 'package:index/widgets/separator.dart';
 
 class FrontPageHeader extends StatefulWidget {
   final Future<ArticlesModel> articles;
+  final Key key;
 
-  FrontPageHeader({this.articles});
+  FrontPageHeader({@required this.articles, this.key});
 
   @override
-  _FrontPageHeaderState createState() =>
-      _FrontPageHeaderState(articles: articles);
+  _FrontPageHeaderState createState() => _FrontPageHeaderState();
 }
 
 class _FrontPageHeaderState extends State<FrontPageHeader> {
-  Future<ArticlesModel> articles;
-
-  _FrontPageHeaderState({this.articles});
-
   _buildHeaderAsyncContent() {
     return FutureBuilder<ArticlesModel>(
-        future: articles,
+        future: widget.articles,
         builder: (context, AsyncSnapshot<ArticlesModel> snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState != ConnectionState.done ||
+              !snapshot.hasData) {
             // return CircularProgressIndicator(strokeWidth: 2);
-            return Column(children: [
-              const ShimmerText(width: 225, marginBottom: 10, alignment: Alignment.center),
-              const ShimmerText(width: 100, marginBottom: 16, alignment: Alignment.center),
-              const ShimmerText(width: 150, marginBottom: 16, alignment: Alignment.center),
-            ],);
+            return Column(
+              children: [
+                const ShimmerText(
+                    width: 225, marginBottom: 10, alignment: Alignment.center),
+                const ShimmerText(
+                    width: 100, marginBottom: 16, alignment: Alignment.center),
+                const ShimmerText(
+                    width: 150, marginBottom: 16, alignment: Alignment.center),
+              ],
+            );
           }
 
           var formatter = DateFormat("EEEE',' d MMMM',' H':'m 'Edition'");
-
           return Column(children: [
             Text(formatter.format(snapshot.data.lastUpdated),
                 style: Theme.of(context).textTheme.headline2),
@@ -64,6 +65,7 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      key: widget.key,
       pinned: true,
       // leading: IconButton(icon: Icon(Icons.settings)),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

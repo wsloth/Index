@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:index/models/articles-model.dart';
 import 'package:index/widgets/frontpage-header.dart';
@@ -21,6 +22,7 @@ class FrontPage extends StatefulWidget {
 
 class _FrontPageState extends State<FrontPage> {
   Future<ArticlesModel> futureArticles;
+  int dragCount = 0;
 
   @override
   void initState() {
@@ -41,16 +43,19 @@ class _FrontPageState extends State<FrontPage> {
       ),
       subtitle: Container(
         margin: EdgeInsets.only(top: 8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.baseline, textBaseline: TextBaseline.alphabetic, children: [
-          Container(
-              child: getArticleScoreStylizedText(context, article.score),
-              margin: EdgeInsets.only(right: 8)),
-          Container(
-              child: Text(timeago.format(article.time),
-                  style: Theme.of(context).textTheme.subtitle2),
-              margin: EdgeInsets.only(right: 8)),
-          getReadableUrlWidget(context, article.url),
-        ]),
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Container(
+                  child: getArticleScoreStylizedText(context, article.score),
+                  margin: EdgeInsets.only(right: 8)),
+              Container(
+                  child: Text(timeago.format(article.time),
+                      style: Theme.of(context).textTheme.subtitle2),
+                  margin: EdgeInsets.only(right: 8)),
+              getReadableUrlWidget(context, article.url),
+            ]),
       ),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,7 +81,9 @@ class _FrontPageState extends State<FrontPage> {
               if (snapshot.hasError) {
                 return getGenericErrorWidget(context);
               }
-              if (snapshot.hasData == false || snapshot.hasData == null) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.hasData == false ||
+                  snapshot.hasData == null) {
                 return Padding(
                   padding: EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -120,15 +127,44 @@ class _FrontPageState extends State<FrontPage> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    if (dragCount == 0) {
+      DateTime currentTime = DateTime.now();
+      // 7 AM
+      DateTime startTime =
+          DateTime(currentTime.year, currentTime.month, currentTime.day, 7)
+              .add(Duration(days: 1));
+      Duration diff = startTime.difference(currentTime);
+      await Fluttertoast.showToast(
+        msg:
+            "Time until next edition: ${diff.inHours} hrs ${diff.inMinutes - (diff.inHours * 60)} min",
+      );
+      await Fluttertoast.showToast(msg: "Drag again to force refresh");
+      setState(() {
+        dragCount += 1;
+      });
+    } else {
+      await Fluttertoast.showToast(msg: "Refreshing feed");
+
+      setState(() {
+        dragCount = 0;
+        futureArticles = ArticleService().fetchFrontPage(forceRefresh: true);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-      slivers: [
-        FrontPageHeader(articles: futureArticles),
-        // SliverPadding(padding: EdgeInsets.all(5)),
-        _buildArticlesList()
-      ],
+        body: RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: CustomScrollView(
+        slivers: [
+          FrontPageHeader(articles: futureArticles),
+          // SliverPadding(padding: EdgeInsets.all(5)),
+          _buildArticlesList()
+        ],
+      ),
     ));
   }
 }
