@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:index/utils/onboarding_styles.dart';
 import 'package:index/views/pages/front-page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -61,10 +62,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Container(
                   alignment: Alignment.centerRight,
                   child: FlatButton(
-                    onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => FrontPage())),
+                    onPressed: () async {
+                      final onboardprefs =
+                          await SharedPreferences.getInstance();
+                      onboardprefs.setInt('onboardState', 1);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => FrontPage()));
+                    },
                     child: Text(
                       'Skip',
                       style: TextStyle(
@@ -218,10 +224,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(
-                onTap: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => FrontPage())),
+                onTap: () async {
+                  final onboardprefs = await SharedPreferences.getInstance();
+                  onboardprefs.setInt('onboardState', 1);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => FrontPage()));
+                },
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 30.0),
