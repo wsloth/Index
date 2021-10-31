@@ -7,12 +7,16 @@ import 'package:get/get.dart';
 import 'package:index/utils/theming.dart';
 
 import 'package:index/views/pages/onboarding_screen.dart';
+import 'package:index/views/pages/front-page.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'models/articles-data-hive_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Permission.storage.request().isGranted;
   putLumberdashToWork(withClients: [ColorizeLumberdash()]);
 
   // Initialise Hive
@@ -21,7 +25,15 @@ void main() async {
   Hive.registerAdapter(ArticlesDataHiveModelAdapter());
   await Hive.openBox<ArticlesDataHiveModel>('articlesData');
 
-  runApp(IndexApp());
+  var onboardValue;
+  final onboardprefs = await SharedPreferences.getInstance();
+  onboardValue = onboardprefs.getInt('onboardState');
+
+  if (onboardValue == 1) {
+    runApp(IndexApp());
+  } else {
+    runApp(OnboardApp());
+  }
 }
 
 /// Sets up the highest quality possible display mode for the app
@@ -43,6 +55,37 @@ class IndexApp extends StatefulWidget {
 }
 
 class _IndexAppState extends State<IndexApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    initDisplayMode();
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      theme: Theming.lightTheme(),
+      darkTheme: Theming.darkTheme(),
+      themeMode: ThemeMode.system,
+      debugShowCheckedModeBanner: false,
+      home: FrontPage(),
+    );
+  }
+}
+
+class OnboardApp extends StatefulWidget {
+  @override
+  _OnboardAppState createState() => _OnboardAppState();
+}
+
+class _OnboardAppState extends State<OnboardApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
