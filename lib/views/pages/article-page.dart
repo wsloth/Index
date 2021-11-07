@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -30,7 +31,11 @@ class ArticlePage extends StatefulWidget {
 class _ArticlePageState extends State<ArticlePage> {
   final ArticleModel article;
   Stream<List<ArticleCommentModel>> commentSectionStream;
+  StreamController<List<ArticleCommentModel>> commentStreamController;
+  List<ArticleCommentModel> currentCommentsList = [];
+  StreamSubscription commentSteamSubscription;
   bool webviewIsLoading = false;
+  bool startedLoadingComments = false;
 
   _ArticlePageState(this.article);
 
@@ -42,7 +47,29 @@ class _ArticlePageState extends State<ArticlePage> {
 
   _fetchArticleDetails() async {
     final service = ArticleService();
+    commentStreamController = StreamController();
     commentSectionStream = service.streamCommentSectionAsync(article);
+    commentSteamSubscription = commentSectionStream.listen((commentsList) {
+      currentCommentsList = commentsList;
+      commentStreamController.add(commentsList);
+      commentSteamSubscription.pause();
+    });
+    commentSteamSubscription.pause();
+  }
+
+  _startLoadingComments() {
+    if (!startedLoadingComments) {
+      commentSteamSubscription.resume();
+    }
+  }
+
+  _loadNextComment() {
+    if (startedLoadingComments) {
+      List<ArticleCommentModel> commentsList = currentCommentsList.map((x) => x).toList();
+      commentsList.add(ArticleCommentModel());
+      commentStreamController.add(commentsList);
+      commentSteamSubscription.resume();
+    }
   }
 
   /// Constructs the page body, which is shown "below" the sliding panel
@@ -114,7 +141,7 @@ class _ArticlePageState extends State<ArticlePage> {
               : Container(),
           SizedBox(height: 24),
 
-          IndexCommentSection(commentSectionStream: commentSectionStream),
+          IndexCommentSection(commentSectionStream: commentStreamController.stream),
         ],
       ),
     );
@@ -158,11 +185,19 @@ class _ArticlePageState extends State<ArticlePage> {
         cornerRadius: 24,
         cornerRadiusOnFullscreen: 0,
         // Configure snapping the overlay to the bottom of the screen
-        snapSpec: const SnapSpec(
+        snapSpec: SnapSpec(
           snap: true,
           snappings: [SnapSpec.headerSnap, SnapSpec.expanded],
           positioning: SnapPositioning.relativeToAvailableSpace,
+          onSnap: (state, snap) {
+            if (snap == 1) 
+              _startLoadingComments();
+          },
         ),
+        listener: (SheetState state) {
+          if (state.scrollOffset+300 > state.maxScrollExtent) 
+            _loadNextComment();
+        },
         // The widget "below" the sliding sheet
         body: _constructPageBody(),
         // Sliding sheet header

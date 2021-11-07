@@ -44,12 +44,16 @@ class IndexCommentSection extends StatelessWidget {
 
         // Efficiently construct list of all comments
         return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: snapshot.data.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (snapshot.data[index].author == null && snapshot.data[index].text == null) {
+              return ShimmerArticle();
+            } else {
               return IndexComment(comment: snapshot.data[index]);
-            });
+            }
+          });
       },
     );
   }
