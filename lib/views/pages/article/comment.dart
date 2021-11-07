@@ -26,7 +26,7 @@ class IndexComment extends StatelessWidget {
                   width: 4,
                   // height: 100,
                   margin: EdgeInsets.only(right: 5),
-                  color: Colors.grey.withOpacity(.5),
+                  color: Colors.grey.withOpacity(.5), 
                 )
               : Container(),
 
@@ -45,7 +45,9 @@ class IndexComment extends StatelessWidget {
                 Html(
                   data: comment.text != null ? comment.text : "<NULL>",
                   style: {
-                    "body": Style(margin: EdgeInsets.all(0)),
+                    "body": Style(
+                      margin: EdgeInsets.only(bottom: 15.0), 
+                    ),
                   },
                 ),
                 Column(
