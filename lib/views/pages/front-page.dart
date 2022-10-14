@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:index/models/articles-model.dart';
+import 'package:index/widgets/article-category-separator.dart';
+import 'package:index/widgets/article.dart';
+import 'package:index/widgets/error.dart';
 import 'package:index/widgets/frontpage-header.dart';
 import 'package:index/widgets/shimmer.dart';
+import 'package:index/widgets/url.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:index/widgets/article.dart';
-import 'package:index/widgets/article-category-separator.dart';
-
-import 'package:index/widgets/url.dart';
-import 'package:index/widgets/error.dart';
-import 'article-page.dart';
-import '../../services/article-service.dart';
 import '../../models/article-model.dart';
+import '../../services/article-service.dart';
+import 'article-page.dart';
 
 class FrontPage extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class FrontPage extends StatefulWidget {
 }
 
 class _FrontPageState extends State<FrontPage> {
-  Future<ArticlesModel> futureArticles;
+  Future<ArticlesModel>? futureArticles;
   int dragCount = 0;
 
   @override
@@ -35,7 +34,7 @@ class _FrontPageState extends State<FrontPage> {
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(24, 8, 24, 8),
       title: Text(
-        article.title,
+        article.title!,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -48,13 +47,13 @@ class _FrontPageState extends State<FrontPage> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Container(
-                  child: getArticleScoreStylizedText(context, article.score),
+                  child: getArticleScoreStylizedText(context, article.score!),
                   margin: EdgeInsets.only(right: 8)),
               Container(
-                  child: Text(timeago.format(article.time),
+                  child: Text(timeago.format(article.time!),
                       style: Theme.of(context).textTheme.subtitle2),
                   margin: EdgeInsets.only(right: 8)),
-              getReadableUrlWidget(context, article.url),
+              getReadableUrlWidget(context, article.url ?? ''),
             ]),
       ),
       trailing: Column(
@@ -73,7 +72,7 @@ class _FrontPageState extends State<FrontPage> {
       builder: (context, AsyncSnapshot<ArticlesModel> snapshot) {
         // Detemine whether to render the loading/error state or the list
         final int childCount =
-            snapshot.hasData ? snapshot.data.articles.length : 1;
+            snapshot.hasData ? snapshot.data!.articles!.length : 1;
 
         return SliverList(
           delegate: SliverChildBuilderDelegate(
@@ -102,7 +101,7 @@ class _FrontPageState extends State<FrontPage> {
               }
 
               final List<Widget> childrenToRender = [
-                _buildArticle(snapshot.data.articles[i]),
+                _buildArticle(snapshot.data!.articles![i]),
               ];
 
               // TODO: Add different categories

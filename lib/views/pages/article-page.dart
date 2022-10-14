@@ -1,25 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:get/get.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:index/models/article-details-model.dart';
+import 'package:index/models/article-model.dart';
 import 'package:index/services/article-service.dart';
 import 'package:index/views/pages/article/comment-section.dart';
-import 'package:index/widgets/error.dart';
-import 'package:index/widgets/separator.dart';
-import 'package:index/widgets/shimmer.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
-
-import 'package:index/models/article-model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'article/slider-header.dart';
 
 class ArticlePage extends StatefulWidget {
-  final ArticleModel article;
+  final ArticleModel? article;
 
   ArticlePage({this.article});
 
@@ -28,8 +24,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-  final ArticleModel article;
-  Stream<List<ArticleCommentModel>> commentSectionStream;
+  final ArticleModel? article;
+  Stream<List<ArticleCommentModel>>? commentSectionStream;
   bool webviewIsLoading = false;
 
   _ArticlePageState(this.article);
@@ -42,17 +38,17 @@ class _ArticlePageState extends State<ArticlePage> {
 
   _fetchArticleDetails() async {
     final service = ArticleService();
-    commentSectionStream = service.streamCommentSectionAsync(article);
+    commentSectionStream = service.streamCommentSectionAsync(article!);
   }
 
   /// Constructs the page body, which is shown "below" the sliding panel
   Widget _constructPageBody() {
     // TODO: Default padding on the bottom where the slider overlaps
-    if (article.url != null) {
+    if (article!.url != null) {
       return Container(
         padding: EdgeInsets.only(bottom: 44),
         child: WebView(
-          initialUrl: article.url,
+          initialUrl: article!.url,
           onPageStarted: (url) {
             setState(() {
               webviewIsLoading = true;
@@ -68,11 +64,11 @@ class _ArticlePageState extends State<ArticlePage> {
       );
     }
 
-    return Html(data: article.text);
+    return Html(data: article!.text);
   }
 
   Widget _constructSlidingSheet() {
-    final articleHasBody = article.text != null;
+    final articleHasBody = article!.text != null;
     return Container(
       color: Get.isDarkMode ? Colors.black : Colors.white,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: 40),
@@ -82,11 +78,11 @@ class _ArticlePageState extends State<ArticlePage> {
           const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerLeft,
-            child: AutoSizeText(article.title,
+            child: AutoSizeText(article!.title ?? '',
                 maxLines: 3,
                 style: Theme.of(context)
                     .textTheme
-                    .headline1
+                    .headline1!
                     .copyWith(fontSize: 40)),
           ),
           const SizedBox(height: 12),
@@ -95,7 +91,7 @@ class _ArticlePageState extends State<ArticlePage> {
           Container(
             child: Row(children: [
               Container(
-                  child: Text("Submitted by ${article.author}"),
+                  child: Text("Submitted by ${article!.author}"),
                   margin: EdgeInsets.only(right: 8)),
             ]),
           ),
@@ -106,7 +102,7 @@ class _ArticlePageState extends State<ArticlePage> {
           articleHasBody ? SizedBox(height: 24) : Container(),
           articleHasBody
               ? Html(
-                  data: article.text,
+                  data: article!.text,
                   style: {
                     "body": Style(margin: EdgeInsets.all(0)),
                   },
@@ -114,7 +110,7 @@ class _ArticlePageState extends State<ArticlePage> {
               : Container(),
           SizedBox(height: 24),
 
-          IndexCommentSection(commentSectionStream: commentSectionStream),
+          IndexCommentSection(commentSectionStream: commentSectionStream!),
         ],
       ),
     );
@@ -142,8 +138,8 @@ class _ArticlePageState extends State<ArticlePage> {
             icon: const Icon(Icons.open_in_browser),
             tooltip: 'Open in browser',
             onPressed: () async {
-              if (await canLaunch(article.url)) {
-                await launch(article.url);
+              if (await canLaunch(article!.url!)) {
+                await launch(article!.url!);
               } else {
                 Get.snackbar('Error',
                     'Unable to open url. Please try again later or contact the developer.');
@@ -166,7 +162,7 @@ class _ArticlePageState extends State<ArticlePage> {
         // The widget "below" the sliding sheet
         body: _constructPageBody(),
         // Sliding sheet header
-        headerBuilder: (_, __) => IndexSlidingSheetHeader(article: article),
+        headerBuilder: (_, __) => IndexSlidingSheetHeader(article: article!),
 
         // Sliding sheet content
         builder: (context, state) {

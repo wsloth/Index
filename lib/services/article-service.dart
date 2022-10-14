@@ -10,7 +10,7 @@ import '../models/article-model.dart';
 
 class ArticleService {
   final baseUrl = 'https://hacker-news.firebaseio.com/v0/';
-  Box<ArticlesDataHiveModel> articlesBox;
+  Box<ArticlesDataHiveModel>? articlesBox;
 
   /// Fetches article IDs from the HN API and stores it in Hive box.
   Future<List<int>> _getDataFromAPI() async {
@@ -24,7 +24,7 @@ class ArticleService {
       lastUpdated: DateTime.now(),
       idList: articleIds,
     );
-    articlesBox.put('data', newArticlesData);
+    articlesBox!.put('data', newArticlesData);
     return articleIds;
   }
 
@@ -32,14 +32,14 @@ class ArticleService {
   /// hacker news currently.
   Future<ArticlesModel> fetchFrontPage({bool forceRefresh = false}) async {
     bool getCachedData = false;
-    List<int> articleIds;
+    List<int>? articleIds;
 
     articlesBox = Hive.box<ArticlesDataHiveModel>('articlesData');
-    ArticlesDataHiveModel articlesData;
+    ArticlesDataHiveModel? articlesData;
 
-    if (!forceRefresh && articlesBox.isNotEmpty) {
+    if (!forceRefresh && articlesBox!.isNotEmpty) {
       // stored data is available
-      articlesData = articlesBox.get('data');
+      articlesData = articlesBox!.get('data');
 
       DateTime currentTime = DateTime.now();
       // 7 AM
@@ -49,32 +49,32 @@ class ArticleService {
       DateTime endTime =
           DateTime(currentTime.year, currentTime.month, currentTime.day, 20);
 
-      if (articlesData.lastUpdated.isAfter(startTime) &&
+      if (articlesData!.lastUpdated.isAfter(startTime) &&
           articlesData.lastUpdated.isBefore(endTime)) {
         getCachedData = true;
       }
 
       articleIds =
-          (getCachedData) ? articlesData.idList : await _getDataFromAPI();
+          (getCachedData) ? articlesData!.idList : await _getDataFromAPI();
     } else {
       // News Feed data is not stored in Hive box.
       // when - App is opened for the first time after install or cleaning app-data.
       articleIds = await _getDataFromAPI();
     }
 
-    articlesData = articlesBox.get('data');
+    articlesData = articlesBox!.get('data');
 
     List<Future<ArticleModel>> apiCalls = [];
-    for (int articleId in articleIds.take(50)) {
+    for (int articleId in articleIds!.take(50)) {
       apiCalls.add(fetchArticle(articleId));
     }
 
     // Fetch all & sort by most popular
     List<ArticleModel> articles = await Future.wait(apiCalls);
-    articles.sort((a, b) => b.score.compareTo(a.score));
+    articles.sort((a, b) => b.score!.compareTo(a.score!));
 
     return ArticlesModel(
-      lastUpdated: articlesData.lastUpdated,
+      lastUpdated: articlesData!.lastUpdated,
       articles: articles,
     );
   }
@@ -88,7 +88,7 @@ class ArticleService {
 
   /// Fetches the article details: for now just the comment section
   Future<ArticleDetailsModel> fetchArticleDetails(ArticleModel article) async {
-    var comments = await fetchChildObjectsRecursively(article.responseIds);
+    var comments = await fetchChildObjectsRecursively(article.responseIds!);
     return ArticleDetailsModel(article: article, comments: comments);
   }
 
@@ -106,7 +106,7 @@ class ArticleService {
     // Fetch all comment responses
     List<Future<void>> responseCalls = [];
     for (var comment in comments) {
-      responseCalls.add(fetchChildObjectsRecursively(comment.responseIds)
+      responseCalls.add(fetchChildObjectsRecursively(comment.responseIds!)
           .then((value) => comment.responses = value));
     }
     await Future.wait(responseCalls);
@@ -123,7 +123,7 @@ class ArticleService {
   Stream<List<ArticleCommentModel>> streamCommentSectionAsync(
       ArticleModel article) async* {
     List<ArticleCommentModel> allComments = [];
-    for (int articleChildId in article.responseIds) {
+    for (int articleChildId in article.responseIds!) {
       var topLevelComment = await fetchCommentThread(articleChildId);
       allComments.add(topLevelComment);
       yield allComments;
@@ -141,7 +141,7 @@ class ArticleService {
       // Fetch all comment responses
       List<Future<void>> responseCalls = [];
       for (var comment in comments) {
-        responseCalls.add(fetchChildObjectsRecursively(comment.responseIds)
+        responseCalls.add(fetchChildObjectsRecursively(comment.responseIds!)
             .then((value) => comment.responses = value));
       }
       await Future.wait(responseCalls);

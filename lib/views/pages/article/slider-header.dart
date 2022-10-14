@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:index/models/article-model.dart';
 import 'package:index/widgets/article.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 const double HEADER_HEIGHT = 60;
 const double HEADER_X_PADDING = 24;
@@ -11,10 +11,10 @@ const double HEADER_X_PADDING = 24;
 /// Widget for the sliding sheet header, displaying some
 /// basic information about the article's discussion.
 class IndexSlidingSheetHeader extends StatelessWidget {
-  final ArticleModel article;
+  final ArticleModel? article;
 
   const IndexSlidingSheetHeader({
-    Key key,
+    Key? key,
     this.article,
   });
 
@@ -22,11 +22,11 @@ class IndexSlidingSheetHeader extends StatelessWidget {
     return Row(
       children: [
         Container(
-          child: getArticleScoreStylizedText(context, article.score),
+          child: getArticleScoreStylizedText(context, article!.score!),
           margin: EdgeInsets.only(right: 8),
         ),
         Container(
-            child: Text(timeago.format(article.time)),
+            child: Text(timeago.format(article!.time!)),
             margin: EdgeInsets.only(right: 8)),
       ],
     );
@@ -65,7 +65,7 @@ class IndexSlidingSheetHeader extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Container(
-              child: Text("${article.descendants} comments"),
+              child: Text("${article!.descendants} comments"),
               margin: EdgeInsets.only(right: 8),
             ),
           ),

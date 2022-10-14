@@ -8,10 +8,10 @@ import 'comment.dart';
 
 /// Constructs the asyncronously streamed comment section
 class IndexCommentSection extends StatelessWidget {
-  final Stream<List<ArticleCommentModel>> commentSectionStream;
+  final Stream<List<ArticleCommentModel>>? commentSectionStream;
 
   const IndexCommentSection({
-    Key key,
+    Key? key,
     this.commentSectionStream,
   });
 
@@ -46,9 +46,9 @@ class IndexCommentSection extends StatelessWidget {
         return ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (BuildContext context, int index) {
-              return IndexComment(comment: snapshot.data[index]);
+              return IndexComment(comment: snapshot.data![index]);
             });
       },
     );

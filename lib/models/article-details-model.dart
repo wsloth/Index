@@ -1,14 +1,14 @@
 import 'article-model.dart';
 
 class ArticleCommentModel {
-  String author;
-  int id;
-  List<int> responseIds;
-  List<ArticleCommentModel> responses;
-  int parent;
-  String text;
-  DateTime time;
-  String type;
+  String? author;
+  int? id;
+  List<int>? responseIds;
+  List<ArticleCommentModel>? responses;
+  int? parent;
+  String? text;
+  DateTime? time;
+  String? type;
 
   ArticleCommentModel({
     this.author,
@@ -21,9 +21,8 @@ class ArticleCommentModel {
   });
 
   factory ArticleCommentModel.fromJson(Map<String, dynamic> json) {
-    if (json == null) return null;
     final int time = json['time'] as int;
-    List<int> responseIds = List<int>();
+    List<int> responseIds = <int>[];
     if (json['kids'] != null)
       responseIds = List<int>.from(json['kids'].map((x) => x));
 
@@ -38,8 +37,8 @@ class ArticleCommentModel {
 }
 
 class ArticleDetailsModel {
-  ArticleModel article;
-  List<ArticleCommentModel> comments;
+  ArticleModel? article;
+  List<ArticleCommentModel>? comments;
 
   ArticleDetailsModel({
     this.article,

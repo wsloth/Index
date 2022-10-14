@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:customizable_space_bar/customizable_space_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:index/models/articles-model.dart';
+import 'package:index/widgets/separator.dart';
 import 'package:index/widgets/shimmer.dart';
 import 'package:intl/intl.dart';
 
-import 'package:index/models/articles-model.dart';
-import 'package:index/widgets/separator.dart';
-
 class FrontPageHeader extends StatefulWidget {
-  final Future<ArticlesModel> articles;
-  final Key key;
+  final Future<ArticlesModel>? articles;
+  final Key? key;
 
   FrontPageHeader({@required this.articles, this.key});
 
@@ -26,11 +25,11 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
             // return CircularProgressIndicator(strokeWidth: 2);
             return Column(
               children: [
-                const ShimmerText(
+                ShimmerText(
                     width: 225, marginBottom: 10, alignment: Alignment.center),
-                const ShimmerText(
+                ShimmerText(
                     width: 100, marginBottom: 16, alignment: Alignment.center),
-                const ShimmerText(
+                ShimmerText(
                     width: 150, marginBottom: 16, alignment: Alignment.center),
               ],
             );
@@ -38,7 +37,7 @@ class _FrontPageHeaderState extends State<FrontPageHeader> {
 
           var formatter = DateFormat("EEEE',' d MMMM',' H':'m 'Edition'");
           return Column(children: [
-            Text(formatter.format(snapshot.data.lastUpdated),
+            Text(formatter.format(snapshot.data!.lastUpdated!),
                 style: Theme.of(context).textTheme.headline2),
             SizedBox(height: 10),
             // TODO: Add volume name that increments every day

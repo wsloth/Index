@@ -7,10 +7,10 @@ import 'package:index/models/article-details-model.dart';
 /// Widget for a comment thread - a parent comment and all it's
 /// child comments (and their responses, on and on).
 class IndexComment extends StatelessWidget {
-  final ArticleCommentModel comment;
+  final ArticleCommentModel? comment;
 
   const IndexComment({
-    Key key,
+    Key? key,
     this.comment,
   });
 
@@ -37,7 +37,7 @@ class IndexComment extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    comment.author != null ? comment.author : '<NULL>',
+                    comment.author != null ? comment.author ?? '' : '<NULL>',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -49,7 +49,7 @@ class IndexComment extends StatelessWidget {
                   },
                 ),
                 Column(
-                    children: comment.responses
+                    children: comment.responses!
                         .map((r) => _buildComment(r, true))
                         .toList()),
               ],
@@ -64,7 +64,7 @@ class IndexComment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 24),
-      child: _buildComment(comment, false),
+      child: _buildComment(comment!, false),
     );
   }
 }

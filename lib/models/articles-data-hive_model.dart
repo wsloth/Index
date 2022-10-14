@@ -8,7 +8,7 @@ class ArticlesDataHiveModel {
   final DateTime lastUpdated;
 
   @HiveField(1)
-  final List<int> idList;
+  final List<int>? idList;
 
-  ArticlesDataHiveModel({this.idList, this.lastUpdated});
+  ArticlesDataHiveModel({required this.idList, required this.lastUpdated});
 }
