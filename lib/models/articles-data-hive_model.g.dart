@@ -17,7 +17,7 @@ class ArticlesDataHiveModelAdapter extends TypeAdapter<ArticlesDataHiveModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ArticlesDataHiveModel(
-      idList: (fields[1] as List)?.cast<int>(),
+      idList: (fields[1] as List).cast<int>(),
       lastUpdated: fields[0] as DateTime,
     );
   }
