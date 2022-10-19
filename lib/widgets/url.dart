@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 /// Returns a friendly readable URL, containing just
 /// the hostname for a clean result.
 Widget getReadableUrlWidget(BuildContext context, final String url) {
-  if (url == null) {
-    return Container();
-  }
-
   // Build the readable URL, remove www.
   // subdomain and remove trailing slash
   final Uri temp = Uri.parse(url);
