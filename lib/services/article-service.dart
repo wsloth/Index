@@ -55,7 +55,7 @@ class ArticleService {
       }
 
       articleIds =
-          (getCachedData) ? articlesData!.idList : await _getDataFromAPI();
+          (getCachedData) ? articlesData.idList : await _getDataFromAPI();
     } else {
       // News Feed data is not stored in Hive box.
       // when - App is opened for the first time after install or cleaning app-data.

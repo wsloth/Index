@@ -81,8 +81,7 @@ class _FrontPageState extends State<FrontPage> {
                 return getGenericErrorWidget(context);
               }
               if (snapshot.connectionState != ConnectionState.done ||
-                  snapshot.hasData == false ||
-                  snapshot.hasData == null) {
+                  snapshot.hasData == false) {
                 return Padding(
                   padding: EdgeInsets.only(left: 24, right: 24),
                   child: Column(

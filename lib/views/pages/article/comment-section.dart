@@ -38,7 +38,7 @@ class IndexCommentSection extends StatelessWidget {
         if (snapshot.hasError) {
           return getGenericErrorWidget(context);
         }
-        if (snapshot.hasData == null || snapshot.hasData == false) {
+        if (snapshot.hasData == false) {
           return _buildLoadingState();
         }
 
