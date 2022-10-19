@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:index/widgets/separator.dart';
 
 class ArticleCategorySeparator extends StatelessWidget {
-  final String title;
+  final String? title;
   final bool showSeparator;
 
   ArticleCategorySeparator({this.title, this.showSeparator = true});
@@ -17,7 +16,7 @@ class ArticleCategorySeparator extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.fromLTRB(24, this.showSeparator ? 24 : 0, 24, 12),
           child: Text(
-            this.title,
+            this.title!,
             style: Theme.of(context).textTheme.headline3,
           ),
         ),

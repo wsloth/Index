@@ -1,14 +1,14 @@
 class ArticleModel {
   // TODO: Add more friendly property names that can be used with multiple news sources
-  final String author;
-  final String title;
-  final String url;
-  final DateTime time;
-  final int score;
-  final String text;
-  final String type;
-  final int descendants;
-  final List<int> responseIds;
+  final String? author;
+  final String? title;
+  final String? url;
+  final DateTime? time;
+  final int? score;
+  final String? text;
+  final String? type;
+  final int? descendants;
+  final List<int>? responseIds;
 
   ArticleModel({
     this.author,
@@ -24,8 +24,8 @@ class ArticleModel {
 
   factory ArticleModel.fromJson(Map<String, dynamic> json) {
     final int time = json['time'] as int;
-    
-    List<int> responseIds = List<int>();
+
+    List<int> responseIds = <int>[];
     if (json['kids'] != null)
       responseIds = List<int>.from(json['kids'].map((x) => x));
 

@@ -11,7 +11,7 @@ class ShimmerText extends StatelessWidget {
   /// Renders a shimmering line that can be used to represent loading
   /// text. The width is 100% by default, but can be fixed.
   const ShimmerText({
-    Key key,
+    Key? key,
     this.width = double.infinity,
     this.height = 16,
     this.marginBottom = 0,
@@ -20,14 +20,15 @@ class ShimmerText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color shimmerBase = Get.isDarkMode ? Colors.grey[850] : Colors.grey[300];
-    Color shimmerHighlight = Get.isDarkMode ? Colors.grey[700] : Colors.grey[100];
+    Color? shimmerBase = Get.isDarkMode ? Colors.grey[850] : Colors.grey[300];
+    Color? shimmerHighlight =
+        Get.isDarkMode ? Colors.grey[700] : Colors.grey[100];
     return Column(children: [
       Align(
           alignment: alignment,
           child: Shimmer.fromColors(
-            baseColor: shimmerBase,
-            highlightColor: shimmerHighlight,
+            baseColor: shimmerBase!,
+            highlightColor: shimmerHighlight!,
             child: Container(
               width: width,
               height: height,
@@ -41,15 +42,15 @@ class ShimmerText extends StatelessWidget {
 
 class ShimmerArticle extends StatelessWidget {
   const ShimmerArticle({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const ShimmerText(height: 18),
+      ShimmerText(height: 18),
       SizedBox(height: 8),
-      const ShimmerText(height: 18, width: 225),
+      ShimmerText(height: 18, width: 225),
       SizedBox(height: 24),
     ]);
   }
