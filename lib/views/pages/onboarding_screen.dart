@@ -29,7 +29,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Color(0xFF7B51D3),
+        color: isActive
+            ? Color.fromARGB(255, 127, 127, 127)
+            : Color.fromARGB(255, 219, 219, 219),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -47,39 +49,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               end: Alignment.bottomCenter,
               stops: [0.1, 0.4, 0.7, 0.9],
               colors: [
-                Color(0xFF3594DD),
-                Color(0xFF4563DB),
-                Color(0xFF5036D5),
-                Color(0xFF5B16D0),
+                Color.fromARGB(255, 238, 238, 238),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 238, 238, 238),
               ],
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 50.0),
+            padding: EdgeInsets.symmetric(vertical: 150.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final onboardprefs =
-                          await SharedPreferences.getInstance();
-                      onboardprefs.setInt('onboardState', 1);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => FrontPage()));
-                    },
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                ),
                 Container(
                   height: 600.0,
                   child: PageView(
@@ -94,7 +75,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Padding(
                         padding: EdgeInsets.all(40.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Center(
                               child: Image(
@@ -107,13 +88,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              '              The Index\n    The Ultimate News App',
+                              'The Index.',
                               style: kTitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Designed to make you engage less and learn more about everything around you.',
+                              'Frontpage of the internet.',
                               style: kSubtitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -121,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Padding(
                         padding: EdgeInsets.all(40.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Center(
                               child: Image(
@@ -134,13 +117,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Live your life smarter\nwith us!',
+                              'Learn more. Read less.',
                               style: kTitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'The ultimate news client which makes you read less with all your news in one place.',
+                              'Designed to show you only the most important updates, only once per day.',
                               style: kSubtitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -148,7 +133,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Padding(
                         padding: EdgeInsets.all(40.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Center(
                               child: Image(
@@ -161,13 +146,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Get a new experience\nof News at your fingertips.',
+                              'With content from the best.',
                               style: kTitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Newsfeed updated once a day to give you everything. Built for people on the go.',
+                              'Based on the Hacker News feed, with the best content from around the internet.',
                               style: kSubtitleStyle,
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -179,40 +166,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: _buildPageIndicator(),
                 ),
-                _currentPage != _numPages - 1
-                    ? Expanded(
-                        child: Align(
-                          alignment: FractionalOffset.bottomRight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _pageController.nextPage(
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  'Next',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22.0,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
-                                  size: 30.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Text(''),
               ],
             ),
           ),
@@ -238,7 +191,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       'Get started',
                       style: TextStyle(
-                        color: Color(0xFF5B16D0),
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
