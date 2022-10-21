@@ -29,7 +29,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Color(0xFF7B51D3),
+        color: isActive
+            ? Color.fromARGB(255, 127, 127, 127)
+            : Color.fromARGB(255, 219, 219, 219),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
@@ -47,10 +49,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               end: Alignment.bottomCenter,
               stops: [0.1, 0.4, 0.7, 0.9],
               colors: [
-                Color(0xFF3594DD),
-                Color(0xFF4563DB),
-                Color(0xFF5036D5),
-                Color(0xFF5B16D0),
+                Color.fromARGB(255, 238, 238, 238),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 238, 238, 238),
               ],
             ),
           ),
@@ -86,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'The Index',
+                              'The Index.',
                               style: kTitleStyle,
                               textAlign: TextAlign.center,
                             ),
@@ -144,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Learn more every day.',
+                              'With content from the best.',
                               style: kTitleStyle,
                               textAlign: TextAlign.center,
                             ),
@@ -189,7 +191,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       'Get started',
                       style: TextStyle(
-                        color: Color(0xFF5B16D0),
+                        color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
