@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:index/models/article-details-model.dart';
 import 'package:index/models/article-model.dart';
@@ -41,10 +41,9 @@ class _ArticlePageState extends State<ArticlePage> {
 
   /// Constructs the page body, which is shown "below" the sliding panel
   Widget _constructPageBody() {
-    // TODO: Default padding on the bottom where the slider overlaps
     if (article!.url != null) {
       return Container(
-        padding: EdgeInsets.only(bottom: 44),
+        padding: EdgeInsets.only(bottom: 40),
         child: WebView(
           initialUrl: article!.url,
           onPageStarted: (url) {
@@ -62,7 +61,7 @@ class _ArticlePageState extends State<ArticlePage> {
       );
     }
 
-    return Html(data: article!.text);
+    return HtmlWidget(article!.text!);
   }
 
   Widget _constructSlidingSheet() {
@@ -98,14 +97,7 @@ class _ArticlePageState extends State<ArticlePage> {
           // TODO: Place sliding sheet title + body in page, hide in sheet?
           // TODO: Or, render the sliding sheet content in the full page!
           articleHasBody ? SizedBox(height: 24) : Container(),
-          articleHasBody
-              ? Html(
-                  data: article!.text,
-                  style: {
-                    "body": Style(margin: EdgeInsets.all(0)),
-                  },
-                )
-              : Container(),
+          articleHasBody ? HtmlWidget(article!.text!) : Container(),
           SizedBox(height: 24),
 
           IndexCommentSection(commentSectionStream: commentSectionStream!),
