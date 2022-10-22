@@ -42,10 +42,8 @@ class IndexComment extends StatelessWidget {
                 SizedBox(height: 8),
                 HtmlWidget(
                   comment.text != null ? comment.text! : "<NULL>",
-                  // style: {
-                  //   "body": Style(margin: EdgeInsets.all(0)),
-                  // },
                 ),
+                SizedBox(height: 8),
                 Column(
                     children: comment.responses!
                         .map((r) => _buildComment(r, true))
@@ -61,7 +59,7 @@ class IndexComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 24),
+      margin: EdgeInsets.only(bottom: 16),
       child: _buildComment(comment!, false),
     );
   }
