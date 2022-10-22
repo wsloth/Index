@@ -41,10 +41,9 @@ class _ArticlePageState extends State<ArticlePage> {
 
   /// Constructs the page body, which is shown "below" the sliding panel
   Widget _constructPageBody() {
-    // TODO: Default padding on the bottom where the slider overlaps
     if (article!.url != null) {
       return Container(
-        padding: EdgeInsets.only(bottom: 44),
+        padding: EdgeInsets.only(bottom: 40),
         child: WebView(
           initialUrl: article!.url,
           onPageStarted: (url) {
